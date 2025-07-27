@@ -12,8 +12,7 @@ export * from './organisms'
 // Templates - Layout structures
 export * from './templates'
 
-// Theme system
-export { ThemeProvider, useTheme } from '../lib/themes/theme-provider'
+// Design tokens (stateless)
 export type { DesignTokens, ThemeColors, SpacingTokens, TypographyTokens, RadiusTokens, ShadowTokens } from '../lib/themes/tokens'
 export { defaultTokens } from '../lib/themes/tokens'
 
