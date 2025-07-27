@@ -1,6 +1,6 @@
 'use client'
 
-import React, { createContext, useContext, useEffect, useState } from 'react'
+import React, { createContext, useContext, useEffect, useState, useMemo } from 'react'
 import { DesignTokens, defaultTokens } from './tokens'
 
 type Theme = 'light' | 'dark' | 'auto'
@@ -73,8 +73,12 @@ export function ThemeProvider({
   ...props
 }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>(defaultTheme)
+  
+  // Memoize customTokens to prevent unnecessary re-renders
+  const stableCustomTokens = useMemo(() => customTokens, [JSON.stringify(customTokens)])
+  
   const [tokens, setTokens] = useState<DesignTokens>(() => 
-    deepMerge(defaultTokens, customTokens)
+    deepMerge(defaultTokens, stableCustomTokens)
   )
 
   useEffect(() => {
@@ -92,8 +96,8 @@ export function ThemeProvider({
 
     // Update CSS custom properties
     const currentTokens = effectiveTheme === 'dark' 
-      ? deepMerge(darkTokens, customTokens)
-      : deepMerge(defaultTokens, customTokens)
+      ? deepMerge(darkTokens, stableCustomTokens)
+      : deepMerge(defaultTokens, stableCustomTokens)
     
     setTokens(currentTokens)
     
@@ -110,7 +114,7 @@ export function ThemeProvider({
     }
 
     setCSSProperty(currentTokens)
-  }, [theme, customTokens])
+  }, [theme, stableCustomTokens])
 
   useEffect(() => {
     const stored = localStorage.getItem(storageKey) as Theme

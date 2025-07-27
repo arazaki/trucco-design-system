@@ -4473,7 +4473,9 @@ function ThemeProvider(_a) {
     } = _a,
     props = __rest(_a, ["children", "defaultTheme", "storageKey", "customTokens"]);
   const [theme, setTheme] = React.useState(defaultTheme);
-  const [tokens, setTokens] = React.useState(() => deepMerge(defaultTokens, customTokens));
+  // Memoize customTokens to prevent unnecessary re-renders
+  const stableCustomTokens = React.useMemo(() => customTokens, [JSON.stringify(customTokens)]);
+  const [tokens, setTokens] = React.useState(() => deepMerge(defaultTokens, stableCustomTokens));
   React.useEffect(() => {
     const root = window.document.documentElement;
     root.classList.remove('light', 'dark');
@@ -4483,7 +4485,7 @@ function ThemeProvider(_a) {
     }
     root.classList.add(effectiveTheme);
     // Update CSS custom properties
-    const currentTokens = effectiveTheme === 'dark' ? deepMerge(darkTokens, customTokens) : deepMerge(defaultTokens, customTokens);
+    const currentTokens = effectiveTheme === 'dark' ? deepMerge(darkTokens, stableCustomTokens) : deepMerge(defaultTokens, stableCustomTokens);
     setTokens(currentTokens);
     // Set CSS custom properties for runtime access
     const setCSSProperty = (obj, prefix = '') => {
@@ -4497,7 +4499,7 @@ function ThemeProvider(_a) {
       }
     };
     setCSSProperty(currentTokens);
-  }, [theme, customTokens]);
+  }, [theme, stableCustomTokens]);
   React.useEffect(() => {
     const stored = localStorage.getItem(storageKey);
     if (stored) {
