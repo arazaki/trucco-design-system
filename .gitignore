@@ -7,7 +7,6 @@ yarn-error.log*
 # Build outputs
 .next/
 .rollup.cache/
-dist/
 storybook-static/
 
 # Environment variables
