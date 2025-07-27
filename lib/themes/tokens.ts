@@ -5,6 +5,20 @@
  * These tokens can be customized and overridden at runtime.
  */
 
+// Re-export theme presets and types
+export { 
+  themePresets, 
+  defaultTheme, 
+  minimalTheme, 
+  vibrantTheme, 
+  corporateTheme, 
+  darkTheme,
+  componentVariations,
+  type ThemePreset,
+  type ThemePresetName 
+} from './theme-presets'
+
+// Legacy compatibility - export types that match the old token structure
 export interface ColorScale {
   50: string;
   100: string;
