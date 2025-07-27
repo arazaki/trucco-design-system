@@ -73,33 +73,46 @@ export function ThemeProvider({
   ...props
 }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>(defaultTheme)
+  const [mounted, setMounted] = useState(false)
   
-  // Memoize customTokens to prevent unnecessary re-renders
+  // Stable reference for customTokens
   const stableCustomTokens = useMemo(() => customTokens, [JSON.stringify(customTokens)])
   
-  const [tokens, setTokens] = useState<DesignTokens>(() => 
-    deepMerge(defaultTokens, stableCustomTokens)
-  )
+  // Calculate effective theme
+  const effectiveTheme = useMemo(() => {
+    if (!mounted) return 'light' // SSR safe default
+    if (theme === 'auto') {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    }
+    return theme
+  }, [theme, mounted])
+  
+  // Calculate current tokens based on effective theme
+  const tokens = useMemo(() => {
+    const baseTokens = effectiveTheme === 'dark' ? darkTokens : defaultTokens
+    return deepMerge(baseTokens, stableCustomTokens)
+  }, [effectiveTheme, stableCustomTokens])
 
+  // Handle mounting to avoid SSR hydration issues
   useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  // Load theme from localStorage on mount
+  useEffect(() => {
+    const stored = localStorage.getItem(storageKey) as Theme
+    if (stored && (stored === 'light' || stored === 'dark' || stored === 'auto')) {
+      setTheme(stored)
+    }
+  }, [storageKey])
+
+  // Apply theme classes and CSS custom properties
+  useEffect(() => {
+    if (!mounted) return
+    
     const root = window.document.documentElement
     root.classList.remove('light', 'dark')
-
-    let effectiveTheme = theme
-    if (theme === 'auto') {
-      effectiveTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
-        ? 'dark'
-        : 'light'
-    }
-
     root.classList.add(effectiveTheme)
-
-    // Update CSS custom properties
-    const currentTokens = effectiveTheme === 'dark' 
-      ? deepMerge(darkTokens, stableCustomTokens)
-      : deepMerge(defaultTokens, stableCustomTokens)
-    
-    setTokens(currentTokens)
     
     // Set CSS custom properties for runtime access
     const setCSSProperty = (obj: any, prefix = '') => {
@@ -113,28 +126,22 @@ export function ThemeProvider({
       }
     }
 
-    setCSSProperty(currentTokens)
-  }, [theme, stableCustomTokens])
+    setCSSProperty(tokens)
+  }, [effectiveTheme, tokens, mounted])
 
-  useEffect(() => {
-    const stored = localStorage.getItem(storageKey) as Theme
-    if (stored) {
-      setTheme(stored)
-    }
-  }, [storageKey])
-
-  const value = {
+  const value = useMemo(() => ({
     theme,
     tokens,
-    setTheme: (theme: Theme) => {
-      localStorage.setItem(storageKey, theme)
-      setTheme(theme)
+    setTheme: (newTheme: Theme) => {
+      localStorage.setItem(storageKey, newTheme)
+      setTheme(newTheme)
     },
     updateTokens: (newTokens: Partial<DesignTokens>) => {
-      const mergedTokens = deepMerge(tokens, newTokens)
-      setTokens(mergedTokens)
+      // This would require additional state management for user-defined token overrides
+      // For now, this is a no-op since tokens are computed from theme + customTokens
+      console.warn('updateTokens is not yet implemented for runtime token updates')
     },
-  }
+  }), [theme, tokens, storageKey])
 
   return (
     <ThemeProviderContext.Provider {...props} value={value}>

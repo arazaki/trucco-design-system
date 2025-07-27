@@ -4453,20 +4453,39 @@ function ThemeProvider(_a) {
     } = _a,
     props = __rest(_a, ["children", "defaultTheme", "storageKey", "customTokens"]);
   const [theme, setTheme] = useState(defaultTheme);
-  // Memoize customTokens to prevent unnecessary re-renders
+  const [mounted, setMounted] = useState(false);
+  // Stable reference for customTokens
   const stableCustomTokens = useMemo(() => customTokens, [JSON.stringify(customTokens)]);
-  const [tokens, setTokens] = useState(() => deepMerge(defaultTokens, stableCustomTokens));
+  // Calculate effective theme
+  const effectiveTheme = useMemo(() => {
+    if (!mounted) return 'light'; // SSR safe default
+    if (theme === 'auto') {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    return theme;
+  }, [theme, mounted]);
+  // Calculate current tokens based on effective theme
+  const tokens = useMemo(() => {
+    const baseTokens = effectiveTheme === 'dark' ? darkTokens : defaultTokens;
+    return deepMerge(baseTokens, stableCustomTokens);
+  }, [effectiveTheme, stableCustomTokens]);
+  // Handle mounting to avoid SSR hydration issues
   useEffect(() => {
+    setMounted(true);
+  }, []);
+  // Load theme from localStorage on mount
+  useEffect(() => {
+    const stored = localStorage.getItem(storageKey);
+    if (stored && (stored === 'light' || stored === 'dark' || stored === 'auto')) {
+      setTheme(stored);
+    }
+  }, [storageKey]);
+  // Apply theme classes and CSS custom properties
+  useEffect(() => {
+    if (!mounted) return;
     const root = window.document.documentElement;
     root.classList.remove('light', 'dark');
-    let effectiveTheme = theme;
-    if (theme === 'auto') {
-      effectiveTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    }
     root.classList.add(effectiveTheme);
-    // Update CSS custom properties
-    const currentTokens = effectiveTheme === 'dark' ? deepMerge(darkTokens, stableCustomTokens) : deepMerge(defaultTokens, stableCustomTokens);
-    setTokens(currentTokens);
     // Set CSS custom properties for runtime access
     const setCSSProperty = (obj, prefix = '') => {
       for (const [key, value] of Object.entries(obj)) {
@@ -4478,26 +4497,21 @@ function ThemeProvider(_a) {
         }
       }
     };
-    setCSSProperty(currentTokens);
-  }, [theme, stableCustomTokens]);
-  useEffect(() => {
-    const stored = localStorage.getItem(storageKey);
-    if (stored) {
-      setTheme(stored);
-    }
-  }, [storageKey]);
-  const value = {
+    setCSSProperty(tokens);
+  }, [effectiveTheme, tokens, mounted]);
+  const value = useMemo(() => ({
     theme,
     tokens,
-    setTheme: theme => {
-      localStorage.setItem(storageKey, theme);
-      setTheme(theme);
+    setTheme: newTheme => {
+      localStorage.setItem(storageKey, newTheme);
+      setTheme(newTheme);
     },
     updateTokens: newTokens => {
-      const mergedTokens = deepMerge(tokens, newTokens);
-      setTokens(mergedTokens);
+      // This would require additional state management for user-defined token overrides
+      // For now, this is a no-op since tokens are computed from theme + customTokens
+      console.warn('updateTokens is not yet implemented for runtime token updates');
     }
-  };
+  }), [theme, tokens, storageKey]);
   return /*#__PURE__*/jsx(ThemeProviderContext.Provider, {
     ...props,
     value: value,
