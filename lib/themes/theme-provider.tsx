@@ -1,7 +1,8 @@
 'use client'
 
-import React, { useEffect } from 'react'
+import React, { createContext, useContext, useEffect, useRef } from 'react'
 import { create } from 'zustand'
+import { subscribeWithSelector, devtools, persist, createJSONStorage } from 'zustand/middleware'
 import { DesignTokens, defaultTokens } from './tokens'
 
 type Theme = 'light' | 'dark' | 'auto'
@@ -12,17 +13,25 @@ type ThemeProviderProps = {
   customTokens?: Partial<DesignTokens>
 }
 
-interface ThemeStore {
+// Separate state and actions for better TypeScript support
+interface ThemeState {
   theme: Theme
+  resolvedTheme: 'light' | 'dark'
+  systemTheme: 'light' | 'dark'
   customTokens: Partial<DesignTokens>
   storageKey: string
-  mounted: boolean
-  setTheme: (theme: Theme) => void
-  setCustomTokens: (tokens: Partial<DesignTokens>) => void
-  setMounted: (mounted: boolean) => void
-  getEffectiveTheme: () => Theme
-  getTokens: () => DesignTokens
+  isHydrated: boolean
 }
+
+interface ThemeActions {
+  setTheme: (theme: Theme) => void
+  setSystemTheme: (systemTheme: 'light' | 'dark') => void
+  setCustomTokens: (tokens: Partial<DesignTokens>) => void
+  setHydrated: (hydrated: boolean) => void
+  resetTheme: () => void
+}
+
+type ThemeStore = ThemeState & ThemeActions
 
 // Dark theme tokens - modified version of default tokens
 const darkTokens: DesignTokens = {
@@ -62,45 +71,88 @@ function deepMerge(target: any, source: any): any {
   return result
 }
 
-// Create Zustand store
-const useThemeStore = create<ThemeStore>((set, get) => ({
+// Default initial state
+const DEFAULT_STATE: ThemeState = {
   theme: 'auto',
+  resolvedTheme: 'light',
+  systemTheme: 'light',
   customTokens: {},
   storageKey: 'trucco-theme',
-  mounted: false,
-  
-  setTheme: (theme: Theme) => {
-    const { storageKey } = get()
-    if (typeof window !== 'undefined') {
-      localStorage.setItem(storageKey, theme)
-    }
-    set({ theme })
-  },
-  
-  setCustomTokens: (customTokens: Partial<DesignTokens>) => {
-    set({ customTokens })
-  },
-  
-  setMounted: (mounted: boolean) => {
-    set({ mounted })
-  },
-  
-  getEffectiveTheme: (): Theme => {
-    const { theme, mounted } = get()
-    if (!mounted || typeof window === 'undefined') return 'light' // SSR safe default
-    if (theme === 'auto') {
-      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
-    }
-    return theme
-  },
-  
-  getTokens: (): DesignTokens => {
-    const { customTokens } = get()
-    const effectiveTheme = get().getEffectiveTheme()
-    const baseTokens = effectiveTheme === 'dark' ? darkTokens : defaultTokens
-    return deepMerge(baseTokens, customTokens)
-  }
-}))
+  isHydrated: false,
+}
+
+// Create store factory for SSR safety
+const createThemeStore = (initProps?: Partial<ThemeState>) => {
+  return create<ThemeStore>()(
+    devtools(
+      persist(
+        subscribeWithSelector((set, get) => ({
+          ...DEFAULT_STATE,
+          ...initProps,
+
+          // Actions with Flux-inspired pattern
+          setTheme: (theme: Theme) => {
+            const { systemTheme } = get()
+            const resolvedTheme = theme === 'auto' ? systemTheme : theme
+            
+            // Apply theme to DOM immediately
+            if (typeof document !== 'undefined') {
+              document.documentElement.classList.toggle('dark', resolvedTheme === 'dark')
+              document.documentElement.style.colorScheme = resolvedTheme
+            }
+            
+            set({ theme, resolvedTheme }, false, 'theme/setTheme')
+          },
+
+          setSystemTheme: (systemTheme: 'light' | 'dark') => {
+            const { theme } = get()
+            const resolvedTheme = theme === 'auto' ? systemTheme : theme
+            
+            // Only update DOM if theme is auto
+            if (typeof document !== 'undefined' && theme === 'auto') {
+              document.documentElement.classList.toggle('dark', resolvedTheme === 'dark')
+              document.documentElement.style.colorScheme = resolvedTheme
+            }
+            
+            set({ systemTheme, resolvedTheme }, false, 'theme/setSystemTheme')
+          },
+
+          setCustomTokens: (customTokens: Partial<DesignTokens>) => {
+            set({ customTokens }, false, 'theme/setCustomTokens')
+          },
+
+          setHydrated: (isHydrated: boolean) => {
+            set({ isHydrated }, false, 'theme/setHydrated')
+          },
+
+          resetTheme: () => {
+            const resetState = { ...DEFAULT_STATE, isHydrated: true }
+            
+            if (typeof document !== 'undefined') {
+              document.documentElement.classList.remove('dark')
+              document.documentElement.style.colorScheme = 'light'
+            }
+            
+            set(resetState, false, 'theme/resetTheme')
+          },
+        })),
+        {
+          name: 'trucco-theme-storage',
+          storage: createJSONStorage(() => localStorage),
+          partialize: (state) => ({ 
+            theme: state.theme,
+            customTokens: state.customTokens,
+          }),
+          skipHydration: true, // Handle hydration manually for SSR safety
+        }
+      ),
+      { name: 'TruccoThemeStore' }
+    )
+  )
+}
+
+// Context for store sharing
+const ThemeStoreContext = createContext<ReturnType<typeof createThemeStore> | null>(null)
 
 export function ThemeProvider({
   children,
@@ -108,47 +160,63 @@ export function ThemeProvider({
   storageKey = 'trucco-theme',
   customTokens = {},
 }: ThemeProviderProps) {
-  const { 
-    theme, 
-    mounted, 
-    setTheme, 
-    setCustomTokens, 
-    setMounted, 
-    getEffectiveTheme, 
-    getTokens 
-  } = useThemeStore()
+  const storeRef = useRef<ReturnType<typeof createThemeStore>>()
 
-  // Initialize store with props
-  useEffect(() => {
-    useThemeStore.setState({ 
-      theme: defaultTheme, 
-      customTokens, 
-      storageKey 
+  // Create store only once per provider instance
+  if (!storeRef.current) {
+    storeRef.current = createThemeStore({
+      theme: defaultTheme,
+      storageKey,
+      customTokens,
     })
-  }, []) // Only run once on mount
+  }
 
-  // Handle mounting
-  useEffect(() => {
-    setMounted(true)
-    
-    // Load theme from localStorage
-    const stored = localStorage.getItem(storageKey) as Theme
-    if (stored && (stored === 'light' || stored === 'dark' || stored === 'auto')) {
-      setTheme(stored)
-    }
-  }, [storageKey, setTheme, setMounted])
+  return (
+    <ThemeStoreContext.Provider value={storeRef.current}>
+      <ThemeHydration>
+        {children}
+      </ThemeHydration>
+    </ThemeStoreContext.Provider>
+  )
+}
 
-  // Apply theme classes and CSS custom properties
+// Separate component for hydration logic to prevent re-renders
+function ThemeHydration({ children }: { children: React.ReactNode }) {
+  const store = useContext(ThemeStoreContext)
+  if (!store) throw new Error('ThemeHydration must be used within ThemeProvider')
+
+  const { 
+    setSystemTheme, 
+    setHydrated, 
+    resolvedTheme, 
+    customTokens,
+    isHydrated 
+  } = store()
+
+  // Handle system theme detection and hydration
   useEffect(() => {
-    if (!mounted) return
-    
-    const effectiveTheme = getEffectiveTheme()
-    const tokens = getTokens()
-    
-    const root = window.document.documentElement
-    root.classList.remove('light', 'dark')
-    root.classList.add(effectiveTheme)
-    
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+    const handleChange = () => setSystemTheme(mediaQuery.matches ? 'dark' : 'light')
+
+    // Set initial system theme
+    handleChange()
+    mediaQuery.addEventListener('change', handleChange)
+
+    // Handle persistence rehydration
+    store.persist.rehydrate()
+    setHydrated(true)
+
+    return () => mediaQuery.removeEventListener('change', handleChange)
+  }, [setSystemTheme, setHydrated, store.persist])
+
+  // Apply CSS custom properties when tokens or theme change
+  useEffect(() => {
+    if (!isHydrated) return
+
+    const tokens = resolvedTheme === 'dark' 
+      ? deepMerge(darkTokens, customTokens)
+      : deepMerge(defaultTokens, customTokens)
+
     // Set CSS custom properties for runtime access
     const setCSSProperty = (obj: any, prefix = '') => {
       for (const [key, value] of Object.entries(obj)) {
@@ -156,27 +224,43 @@ export function ThemeProvider({
           setCSSProperty(value, `${prefix}${prefix ? '-' : ''}${key}`)
         } else {
           const cssVar = `--trucco-${prefix}${prefix ? '-' : ''}${key}`
-          root.style.setProperty(cssVar, String(value))
+          document.documentElement.style.setProperty(cssVar, String(value))
         }
       }
     }
 
     setCSSProperty(tokens)
-  }, [theme, mounted, getEffectiveTheme, getTokens])
+  }, [resolvedTheme, customTokens, isHydrated])
 
   return <>{children}</>
 }
 
 export const useTheme = () => {
-  const { theme, setTheme, getEffectiveTheme, getTokens } = useThemeStore()
-  
+  const store = useContext(ThemeStoreContext)
+  if (!store) throw new Error('useTheme must be used within a ThemeProvider')
+
+  const { 
+    theme, 
+    resolvedTheme, 
+    customTokens, 
+    isHydrated, 
+    setTheme, 
+    setCustomTokens, 
+    resetTheme 
+  } = store()
+
+  // Calculate tokens
+  const tokens = resolvedTheme === 'dark' 
+    ? deepMerge(darkTokens, customTokens)
+    : deepMerge(defaultTokens, customTokens)
+
   return {
     theme,
-    tokens: getTokens(),
-    effectiveTheme: getEffectiveTheme(),
+    resolvedTheme,
+    tokens,
+    isHydrated,
     setTheme,
-    updateTokens: (newTokens: Partial<DesignTokens>) => {
-      useThemeStore.getState().setCustomTokens(newTokens)
-    }
+    updateTokens: setCustomTokens,
+    resetTheme,
   }
 }
