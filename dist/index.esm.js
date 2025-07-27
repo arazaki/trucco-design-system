@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState, useMemo, useEffect, createContext, useContext } from 'react';
+import React__default, { useEffect } from 'react';
 import { jsx, jsxs, Fragment } from 'react/jsx-runtime';
 
 /******************************************************************************
@@ -4220,6 +4220,47 @@ const ContentLayout = /*#__PURE__*/React.forwardRef((_a, ref) => {
 });
 ContentLayout.displayName = 'ContentLayout';
 
+const createStoreImpl = (createState) => {
+  let state;
+  const listeners = /* @__PURE__ */ new Set();
+  const setState = (partial, replace) => {
+    const nextState = typeof partial === "function" ? partial(state) : partial;
+    if (!Object.is(nextState, state)) {
+      const previousState = state;
+      state = (replace != null ? replace : typeof nextState !== "object" || nextState === null) ? nextState : Object.assign({}, state, nextState);
+      listeners.forEach((listener) => listener(state, previousState));
+    }
+  };
+  const getState = () => state;
+  const getInitialState = () => initialState;
+  const subscribe = (listener) => {
+    listeners.add(listener);
+    return () => listeners.delete(listener);
+  };
+  const api = { setState, getState, getInitialState, subscribe };
+  const initialState = state = createState(setState, getState, api);
+  return api;
+};
+const createStore = (createState) => createState ? createStoreImpl(createState) : createStoreImpl;
+
+const identity = (arg) => arg;
+function useStore(api, selector = identity) {
+  const slice = React__default.useSyncExternalStore(
+    api.subscribe,
+    () => selector(api.getState()),
+    () => selector(api.getInitialState())
+  );
+  React__default.useDebugValue(slice);
+  return slice;
+}
+const createImpl = (createState) => {
+  const api = createStore(createState);
+  const useBoundStore = (selector) => useStore(api, selector);
+  Object.assign(useBoundStore, api);
+  return useBoundStore;
+};
+const create = (createState) => createState ? createImpl(createState) : createImpl;
+
 /**
  * Design Tokens for Trucco Design System
  *
@@ -4405,14 +4446,6 @@ const defaultTokens = {
   }
 };
 
-const initialState = {
-  theme: 'auto',
-  tokens: defaultTokens,
-  setTheme: () => null,
-  updateTokens: () => null
-};
-const ThemeProviderContext = /*#__PURE__*/createContext(initialState);
-// Dark theme tokens - modified version of default tokens
 const darkTokens = Object.assign(Object.assign({}, defaultTokens), {
   colors: Object.assign(Object.assign({}, defaultTokens.colors), {
     background: {
@@ -4444,45 +4477,90 @@ function deepMerge(target, source) {
   }
   return result;
 }
-function ThemeProvider(_a) {
-  var {
-      children,
-      defaultTheme = 'auto',
-      storageKey = 'trucco-theme',
-      customTokens = {}
-    } = _a,
-    props = __rest(_a, ["children", "defaultTheme", "storageKey", "customTokens"]);
-  const [theme, setTheme] = useState(defaultTheme);
-  const [mounted, setMounted] = useState(false);
-  // Stable reference for customTokens
-  const stableCustomTokens = useMemo(() => customTokens, [JSON.stringify(customTokens)]);
-  // Calculate effective theme
-  const effectiveTheme = useMemo(() => {
-    if (!mounted) return 'light'; // SSR safe default
+// Create Zustand store
+const useThemeStore = create((set, get) => ({
+  theme: 'auto',
+  customTokens: {},
+  storageKey: 'trucco-theme',
+  mounted: false,
+  setTheme: theme => {
+    const {
+      storageKey
+    } = get();
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(storageKey, theme);
+    }
+    set({
+      theme
+    });
+  },
+  setCustomTokens: customTokens => {
+    set({
+      customTokens
+    });
+  },
+  setMounted: mounted => {
+    set({
+      mounted
+    });
+  },
+  getEffectiveTheme: () => {
+    const {
+      theme,
+      mounted
+    } = get();
+    if (!mounted || typeof window === 'undefined') return 'light'; // SSR safe default
     if (theme === 'auto') {
       return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
     }
     return theme;
-  }, [theme, mounted]);
-  // Calculate current tokens based on effective theme
-  const tokens = useMemo(() => {
+  },
+  getTokens: () => {
+    const {
+      customTokens
+    } = get();
+    const effectiveTheme = get().getEffectiveTheme();
     const baseTokens = effectiveTheme === 'dark' ? darkTokens : defaultTokens;
-    return deepMerge(baseTokens, stableCustomTokens);
-  }, [effectiveTheme, stableCustomTokens]);
-  // Handle mounting to avoid SSR hydration issues
+    return deepMerge(baseTokens, customTokens);
+  }
+}));
+function ThemeProvider({
+  children,
+  defaultTheme = 'auto',
+  storageKey = 'trucco-theme',
+  customTokens = {}
+}) {
+  const {
+    theme,
+    mounted,
+    setTheme,
+    setCustomTokens,
+    setMounted,
+    getEffectiveTheme,
+    getTokens
+  } = useThemeStore();
+  // Initialize store with props
+  useEffect(() => {
+    useThemeStore.setState({
+      theme: defaultTheme,
+      customTokens,
+      storageKey
+    });
+  }, []); // Only run once on mount
+  // Handle mounting
   useEffect(() => {
     setMounted(true);
-  }, []);
-  // Load theme from localStorage on mount
-  useEffect(() => {
+    // Load theme from localStorage
     const stored = localStorage.getItem(storageKey);
     if (stored && (stored === 'light' || stored === 'dark' || stored === 'auto')) {
       setTheme(stored);
     }
-  }, [storageKey]);
+  }, [storageKey, setTheme, setMounted]);
   // Apply theme classes and CSS custom properties
   useEffect(() => {
     if (!mounted) return;
+    const effectiveTheme = getEffectiveTheme();
+    const tokens = getTokens();
     const root = window.document.documentElement;
     root.classList.remove('light', 'dark');
     root.classList.add(effectiveTheme);
@@ -4498,30 +4576,27 @@ function ThemeProvider(_a) {
       }
     };
     setCSSProperty(tokens);
-  }, [effectiveTheme, tokens, mounted]);
-  const value = useMemo(() => ({
-    theme,
-    tokens,
-    setTheme: newTheme => {
-      localStorage.setItem(storageKey, newTheme);
-      setTheme(newTheme);
-    },
-    updateTokens: newTokens => {
-      // This would require additional state management for user-defined token overrides
-      // For now, this is a no-op since tokens are computed from theme + customTokens
-      console.warn('updateTokens is not yet implemented for runtime token updates');
-    }
-  }), [theme, tokens, storageKey]);
-  return /*#__PURE__*/jsx(ThemeProviderContext.Provider, {
-    ...props,
-    value: value,
+  }, [theme, mounted, getEffectiveTheme, getTokens]);
+  return /*#__PURE__*/jsx(Fragment, {
     children: children
   });
 }
 const useTheme = () => {
-  const context = useContext(ThemeProviderContext);
-  if (context === undefined) throw new Error('useTheme must be used within a ThemeProvider');
-  return context;
+  const {
+    theme,
+    setTheme,
+    getEffectiveTheme,
+    getTokens
+  } = useThemeStore();
+  return {
+    theme,
+    tokens: getTokens(),
+    effectiveTheme: getEffectiveTheme(),
+    setTheme,
+    updateTokens: newTokens => {
+      useThemeStore.getState().setCustomTokens(newTokens);
+    }
+  };
 };
 
 export { Button, ButtonGroup, ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon, ChevronUpIcon, ContentLayout, EyeIcon, EyeOffIcon, FormGroup, Header, Input, LoadingSpinner, LockIcon, MailIcon, Navigation, PageLayout, PlusIcon, SearchField, SearchIcon, Text, Textarea, ThemeProvider, XIcon, cn, cva, defaultTokens, useTheme };
