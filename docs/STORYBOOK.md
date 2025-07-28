@@ -204,16 +204,18 @@ stories/
 Storybook automatically generates controls from TypeScript interfaces:
 
 ```typescript
-// Component interface
+// Component interface (Enhanced with shadcn/ui integration)
 interface ButtonProps {
-  variant?: 'primary' | 'secondary' | 'tertiary' | 'outline' | 'ghost' | 'link'
+  variant?: 'primary' | 'secondary' | 'tertiary' | 'outline' | 'ghost' | 'link' | 'success' | 'warning' | 'error'
   size?: 'sm' | 'md' | 'lg' | 'xl' | 'icon'
   disabled?: boolean
   loading?: boolean
+  fullWidth?: boolean
   leftIcon?: React.ReactNode
   rightIcon?: React.ReactNode
   children: React.ReactNode
   className?: string
+  asChild?: boolean // shadcn/ui Slot support
 }
 
 // Storybook automatically creates:

@@ -2,7 +2,7 @@
 
 ## Overview
 
-This guide provides comprehensive knowledge for creating Next.js-optimized design system components. It covers architecture patterns, performance optimizations, and framework-specific features that make Trucco components work seamlessly within Next.js applications.
+This guide provides comprehensive knowledge for creating Next.js-optimized design system components with shadcn/ui integration. It covers architecture patterns, performance optimizations, and framework-specific features that make Trucco components work seamlessly within Next.js applications while leveraging proven shadcn/ui accessibility patterns.
 
 ## Next.js Architecture Fundamentals
 

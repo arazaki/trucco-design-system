@@ -2,14 +2,16 @@
 
 ## Overview
 
-Trucco is a flexible, theme-driven design system built on Next.js and Tailwind CSS. It provides reusable components with consistent design patterns, configurable theming, and runtime theme switching capabilities.
+Trucco is a flexible, theme-driven design system built on Next.js and Tailwind CSS with shadcn/ui integration. It provides reusable components with consistent design patterns, configurable theming, runtime theme switching capabilities, and enhanced accessibility through proven shadcn/ui patterns.
 
 ## Technology Stack
 
 - **Framework**: Next.js 15 with TypeScript
 - **Styling**: Tailwind CSS with custom design tokens
+- **Component Foundation**: shadcn/ui components with Trucco enhancements
 - **Component Variants**: class-variance-authority (CVA)
 - **Utilities**: clsx + tailwind-merge for class merging
+- **Accessibility**: Radix UI primitives via shadcn/ui
 - **Icons**: @radix-ui/react-slot for flexible composition
 - **Documentation**: Storybook for component showcase
 
@@ -62,15 +64,15 @@ const { theme, setTheme, tokens } = useTheme()
 
 ## Available Components
 
-### Button Component (`/components/ui/button.tsx`)
+### Button Component (`/components/atoms/button.tsx`)
+
+**shadcn/ui Enhanced Button**: Wraps shadcn Button with Trucco's design system enhancements.
 
 **Props Interface**:
 ```typescript
 interface ButtonProps {
   variant?: 'primary' | 'secondary' | 'tertiary' | 'outline' | 'ghost' | 'link' | 'success' | 'warning' | 'error'
   size?: 'sm' | 'md' | 'lg' | 'xl' | 'icon'
-  radius?: 'none' | 'sm' | 'md' | 'lg' | 'xl' | 'full'
-  shadow?: 'none' | 'sm' | 'md' | 'lg' | 'xl'
   fullWidth?: boolean
   loading?: boolean
   leftIcon?: React.ReactNode
@@ -79,6 +81,12 @@ interface ButtonProps {
   className?: string // Override/extend styles
 }
 ```
+
+**Architecture**: 
+- Built on shadcn/ui Button foundation for proven accessibility and performance
+- Variant mapping system translates Trucco variants to shadcn variants
+- Enhanced with Trucco's semantic color system and loading states
+- Maintains full shadcn/ui API compatibility
 
 **Usage Examples**:
 ```tsx
@@ -109,15 +117,15 @@ interface ButtonProps {
 - **link**: Text-only with underline
 - **success/warning/error**: Semantic color variants
 
-### Input Component (`/components/ui/input.tsx`)
+### Input Component (`/components/atoms/input.tsx`)
+
+**shadcn/ui Enhanced Input**: Wraps shadcn Input with Trucco's enhanced features and semantic theming.
 
 **Props Interface**:
 ```typescript
 interface InputProps {
-  variant?: 'default' | 'success' | 'warning' | 'error' | 'ghost'
-  size?: 'sm' | 'md' | 'lg' | 'xl'
-  radius?: 'none' | 'sm' | 'md' | 'lg' | 'xl' | 'full'
-  shadow?: 'none' | 'sm' | 'md' | 'lg'
+  variant?: 'default' | 'success' | 'warning' | 'error'
+  theme?: 'semantic' | 'red' | 'blue' | 'purple' | 'green'
   leftIcon?: React.ReactNode
   rightIcon?: React.ReactNode
   label?: string
@@ -127,10 +135,23 @@ interface InputProps {
   className?: string
 }
 
-interface TextareaProps extends InputProps {
-  // Similar props but for textarea element
+interface TextareaProps {
+  variant?: 'default' | 'success' | 'warning' | 'error'
+  theme?: 'semantic' | 'red' | 'blue' | 'purple' | 'green'
+  label?: string
+  helperText?: string
+  error?: string
+  fullWidth?: boolean
+  className?: string
 }
 ```
+
+**Architecture**:
+- Built on shadcn/ui Input foundation with enhanced wrapper
+- Automatic label, helper text, and error message handling
+- Icon support with proper positioning and accessibility
+- Semantic theme variants for different contexts
+- Auto-generated IDs for proper label association
 
 **Usage Examples**:
 ```tsx
@@ -169,6 +190,88 @@ interface TextareaProps extends InputProps {
 - Error state automatically overrides variant
 - Proper ARIA attributes for accessibility
 - Auto-generated IDs for label association
+
+## shadcn/ui Integration Architecture
+
+### CSS Variable Bridge System
+
+Trucco maintains compatibility with shadcn/ui through an automatic CSS variable mapping system:
+
+```css
+/* Automatic mapping in globals.css */
+:root {
+  /* shadcn semantic variables mapped to Trucco tokens */
+  --background: var(--surface);
+  --foreground: var(--text-primary);
+  --primary: var(--primary-600);
+  --primary-foreground: var(--text-on-primary);
+  --secondary: var(--secondary-100);
+  --secondary-foreground: var(--secondary-900);
+  --muted: var(--neutral-100);
+  --muted-foreground: var(--neutral-500);
+  --destructive: var(--error);
+  --destructive-foreground: var(--text-on-error);
+  --border: var(--border-primary);
+  --ring: var(--primary-500);
+}
+```
+
+### Component Wrapping Strategy
+
+**Enhanced Components**: Trucco components wrap shadcn/ui components to provide:
+- **Semantic Theming**: Additional theme variants beyond shadcn defaults
+- **Enhanced APIs**: More props for common use cases (icons, loading states)
+- **Design System Integration**: Automatic integration with Trucco's token system
+- **Backward Compatibility**: Full shadcn/ui API preservation
+
+**Example - Button Integration**:
+```typescript
+// Enhanced Button wraps shadcn Button
+import { Button as ShadcnButton } from '@/components/ui/button'
+
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ variant = 'primary', ...props }, ref) => {
+    // Map Trucco variants to shadcn variants
+    const variantMapping = {
+      primary: 'default',
+      secondary: 'secondary',
+      tertiary: 'outline',
+      success: 'default', // Uses theme override
+      warning: 'default', // Uses theme override
+      error: 'destructive',
+    } as const
+
+    return (
+      <ShadcnButton
+        ref={ref}
+        variant={variantMapping[variant] || 'default'}
+        className={cn(truccoButtonVariants({ variant }), className)}
+        {...props}
+      />
+    )
+  }
+)
+```
+
+### Theme System Integration
+
+**Runtime Theme Switching** with shadcn compatibility:
+```typescript
+// ThemeProvider handles both systems
+<ThemeProvider defaultTheme="auto" customTokens={customTokens}>
+  {/* Both Trucco and shadcn components work seamlessly */}
+  <Button variant="primary">Trucco Button</Button>
+  <ShadcnButton variant="default">shadcn Button</ShadcnButton>
+</ThemeProvider>
+```
+
+### Accessibility Inheritance
+
+All Trucco components inherit shadcn/ui's proven accessibility patterns:
+- **Keyboard Navigation**: Full keyboard support via Radix UI primitives
+- **Screen Reader Support**: Proper ARIA attributes and semantic HTML
+- **Focus Management**: Consistent focus styles and behavior
+- **Color Contrast**: WCAG-compliant color combinations
 
 ## Tailwind CSS Integration
 

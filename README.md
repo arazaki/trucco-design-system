@@ -1,17 +1,19 @@
 # Trucco Design System
 
-A flexible, theme-driven design system built on Next.js and Tailwind CSS, implementing Component Driven Development principles with atomic design methodology.
+A flexible, theme-driven design system built on Next.js and Tailwind CSS with shadcn/ui integration, implementing Component Driven Development principles with atomic design methodology.
 
 ## ✨ Features
 
 - 🎨 **Complete Design Token System** - Comprehensive color palettes, typography, spacing, and semantic tokens
 - 🧱 **Atomic Design Architecture** - Organized components from atoms to templates
-- 🌙 **Theme System** - Runtime light/dark mode switching with auto-detection
+- 🌙 **Advanced Theme System** - Runtime light/dark mode switching with auto-detection and custom token support
 - 📱 **Responsive Design** - Mobile-first approach with consistent breakpoints
-- ♿ **Accessibility First** - WCAG compliant with proper ARIA attributes
+- ♿ **Accessibility First** - WCAG compliant with proper ARIA attributes and shadcn/ui accessibility patterns
 - 🔧 **TypeScript Support** - Full type safety with intelligent autocomplete
 - 📚 **Storybook Documentation** - Interactive component playground and documentation
 - ⚡ **Next.js Optimized** - Built specifically for Next.js applications
+- 🎯 **shadcn/ui Integration** - Enhanced components built on proven shadcn/ui foundation
+- 🚀 **Modern Architecture** - Uses Radix UI primitives, CVA for variants, and advanced CSS bridging
 
 ## 🚀 Quick Start
 
@@ -48,17 +50,51 @@ export default function RootLayout({ children }) {
 }
 ```
 
-3. **Add Trucco design tokens to your CSS:**
+3. **Add Trucco styles to your CSS:**
 
 ```css
 /* globals.css */
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
+/* SHADCN BRIDGE - Automatic mapping between Trucco and shadcn variables */
 :root {
-  /* Trucco design tokens will be injected here */
-  --color-primary-500: #3b82f6;
-  --color-secondary-500: #d946ef;
-  /* ... etc */
+  /* shadcn semantic variables mapped to Trucco tokens */
+  --background: var(--surface);
+  --foreground: var(--text-primary);
+  --primary: var(--primary-600);
+  --primary-foreground: var(--text-on-primary);
+  --secondary: var(--secondary-100);
+  --secondary-foreground: var(--secondary-900);
+  --muted: var(--neutral-100);
+  --muted-foreground: var(--neutral-500);
+  --accent: var(--neutral-100);
+  --accent-foreground: var(--neutral-900);
+  --destructive: var(--error);
+  --destructive-foreground: var(--text-on-error);
+  --border: var(--border-primary);
+  --input: var(--border-primary);
+  --ring: var(--primary-500);
+  --radius: 0.5rem;
+}
+
+.dark {
+  --background: var(--surface);
+  --foreground: var(--text-primary);
+  --primary: var(--primary-500);
+  --primary-foreground: var(--text-on-primary);
+  --secondary: var(--secondary-800);
+  --secondary-foreground: var(--secondary-100);
+  --muted: var(--neutral-800);
+  --muted-foreground: var(--neutral-400);
+  --accent: var(--neutral-800);
+  --accent-foreground: var(--neutral-100);
+  --destructive: var(--error);
+  --destructive-foreground: var(--text-on-error);
+  --border: var(--border-primary);
+  --input: var(--border-primary);
+  --ring: var(--primary-500);
 }
 ```
 
@@ -117,13 +153,14 @@ export default function MyPage() {
 ## 📦 Component Library
 
 ### Atoms (Basic Elements)
-- **Button** - Multiple variants, sizes, states, and icon support
-- **Input** - Text inputs and textareas with validation states
+- **Button** - Enhanced shadcn Button with Trucco variants and semantic colors
+- **Input** - Advanced input wrapper with label, helper text, and error states
+- **Textarea** - Multi-line text input with consistent API
 - **Text** - Typography system with semantic variants
 - **Icons** - Consistent icon library
 
 ### Molecules (Simple Compositions)
-- **SearchField** - Input with search icon and clear functionality
+- **SearchField** - Input with built-in search icon and clear functionality
 - **FormGroup** - Label, input, helper text, and error message composition
 - **ButtonGroup** - Grouped buttons with consistent spacing
 
@@ -134,6 +171,12 @@ export default function MyPage() {
 ### Templates (Layout Structures)
 - **PageLayout** - Full page layout with header, sidebar, main, and footer
 - **ContentLayout** - Content area with title, breadcrumb, and actions
+
+### Enhanced Features
+- **shadcn/ui Integration** - All components built on proven shadcn/ui foundation
+- **Advanced Theming** - CSS variable bridge for seamless theme switching
+- **TypeScript-First** - Full type safety with intelligent autocomplete
+- **Accessibility Built-in** - WCAG compliant with proper ARIA patterns
 
 ## 🎨 Design System
 
@@ -150,10 +193,17 @@ export default function MyPage() {
 
 ### Component Variants
 All components support systematic variation through props:
-- `variant` - Visual style (primary, secondary, outline, ghost, etc.)
+- `variant` - Visual style (primary, secondary, tertiary, outline, ghost, etc.)
 - `size` - Sizing scale (sm, md, lg, xl)
-- `radius` - Border radius options
-- `shadow` - Drop shadow intensities
+- `theme` - Semantic theme variants (semantic, red, blue, purple, green)
+- Semantic states - Success, warning, error variants automatically applied
+
+### shadcn/ui Bridge
+Trucco seamlessly integrates with shadcn/ui through:
+- **CSS Variable Mapping** - Automatic translation between Trucco tokens and shadcn variables
+- **Component Wrapping** - Enhanced shadcn components with Trucco's design system
+- **Theme Compatibility** - Full light/dark mode support with both systems
+- **Accessibility Inheritance** - All shadcn accessibility patterns preserved
 
 ## 🔧 Development
 
