@@ -124,6 +124,9 @@ export const Muted: Story = {
 }
 
 export const AllHeadings: Story = {
+  args: {
+    children: null,
+  },
   render: () => (
     <div className="space-y-4">
       <Text variant="h1">Heading 1 - Main Title</Text>
@@ -140,6 +143,9 @@ export const AllHeadings: Story = {
 }
 
 export const AllVariants: Story = {
+  args: {
+    children: null,
+  },
   render: () => (
     <div className="space-y-3 max-w-lg">
       <Text variant="h2">Typography Variants</Text>
@@ -161,6 +167,9 @@ export const AllVariants: Story = {
 }
 
 export const TextAlignment: Story = {
+  args: {
+    children: null,
+  },
   render: () => (
     <div className="space-y-4 w-80">
       <Text align="left">Left aligned text (default)</Text>
@@ -175,6 +184,9 @@ export const TextAlignment: Story = {
 }
 
 export const FontWeights: Story = {
+  args: {
+    children: null,
+  },
   render: () => (
     <div className="space-y-2">
       <Text weight="light">Light weight text</Text>

@@ -90,6 +90,9 @@ export const LargeSpacing: Story = {
 }
 
 export const FormExample: Story = {
+  args: {
+    children: null,
+  },
   render: () => (
     <form className="space-y-6 w-80">
       <FormGroup

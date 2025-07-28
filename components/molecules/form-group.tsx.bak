@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Text } from '../atoms/text'
-import { cn } from '@/lib/utils'
+import { cn } from '../../lib/utils/cn'
 
 export interface FormGroupProps extends React.HTMLAttributes<HTMLDivElement> {
   label?: string

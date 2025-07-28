@@ -139,6 +139,9 @@ export const Pagination: Story = {
 }
 
 export const SpacingVariants: Story = {
+  args: {
+    children: null,
+  },
   render: () => (
     <div className="space-y-6">
       <div>

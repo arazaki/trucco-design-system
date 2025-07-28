@@ -58,7 +58,7 @@ export type ThemePreset = {
   shadows: Record<string, string>;
 }
 
-// 1. Default Theme - Modern, versatile, professional
+// 1. Default Theme - Classic Blue (GitHub/Tailwind style)
 export const defaultTheme: ThemePreset = {
   name: 'Default',
   colors: {
@@ -68,7 +68,7 @@ export const defaultTheme: ThemePreset = {
       200: '#bfdbfe',
       300: '#93c5fd',
       400: '#60a5fa',
-      500: '#3b82f6', // Main primary
+      500: '#3b82f6', // Classic blue
       600: '#2563eb',
       700: '#1d4ed8',
       800: '#1e40af',
@@ -157,12 +157,12 @@ export const defaultTheme: ThemePreset = {
   },
   borderRadius: {
     none: '0',
-    sm: '0.125rem',   // 2px
-    base: '0.25rem',  // 4px
-    md: '0.375rem',   // 6px
-    lg: '0.5rem',     // 8px
-    xl: '0.75rem',    // 12px
-    '2xl': '1rem',    // 16px
+    sm: '0.25rem',    // 4px - slightly more rounded
+    base: '0.5rem',   // 8px
+    md: '0.75rem',    // 12px
+    lg: '1rem',       // 16px
+    xl: '1.25rem',    // 20px
+    '2xl': '1.5rem',  // 24px
     full: '9999px'
   },
   shadows: {
@@ -176,22 +176,22 @@ export const defaultTheme: ThemePreset = {
   }
 } as const
 
-// 2. Minimal Theme - Clean, subtle, refined
+// 2. Minimal Theme - Monochrome Gray (Apple/Notion style)
 export const minimalTheme: ThemePreset = {
   name: 'Minimal',
   colors: {
     primary: {
-      50: '#f8fafc',
-      100: '#f1f5f9',
-      200: '#e2e8f0',
-      300: '#cbd5e1',
-      400: '#94a3b8',
-      500: '#64748b', // Muted primary
-      600: '#475569',
-      700: '#334155',
-      800: '#1e293b',
-      900: '#0f172a',
-      950: '#020617'
+      50: '#f9fafb',
+      100: '#f3f4f6',
+      200: '#e5e7eb',
+      300: '#d1d5db',
+      400: '#9ca3af',
+      500: '#6b7280', // Pure gray primary
+      600: '#4b5563',
+      700: '#374151',
+      800: '#1f2937',
+      900: '#111827',
+      950: '#030712'
     },
     neutral: {
       50: '#fefefe',
@@ -231,8 +231,8 @@ export const minimalTheme: ThemePreset = {
   },
   typography: {
     fontFamily: {
-      sans: ['SF Pro Display', 'system-ui', 'sans-serif'],
-      mono: ['SF Mono', 'Monaco', 'monospace']
+      sans: ['-apple-system', 'BlinkMacSystemFont', 'SF Pro Display', 'system-ui', 'sans-serif'],
+      mono: ['SF Mono', 'Monaco', 'Menlo', 'monospace']
     },
     fontSize: {
       xs: '0.75rem',
@@ -275,12 +275,12 @@ export const minimalTheme: ThemePreset = {
   },
   borderRadius: {
     none: '0',
-    sm: '0.125rem',  // Minimal rounded corners
-    base: '0.25rem',
-    md: '0.25rem',   // Keep consistent
-    lg: '0.375rem',
-    xl: '0.5rem',
-    '2xl': '0.75rem',
+    sm: '0.125rem',  // Very minimal
+    base: '0.125rem', // Almost no rounding
+    md: '0.25rem',   
+    lg: '0.25rem',   // Keep minimal
+    xl: '0.375rem',
+    '2xl': '0.5rem',
     full: '9999px'
   },
   shadows: {
@@ -294,22 +294,22 @@ export const minimalTheme: ThemePreset = {
   }
 } as const
 
-// 3. Vibrant Theme - Bold, energetic, creative
+// 3. Vibrant Theme - Electric Purple (Discord/Twitch style)
 export const vibrantTheme: ThemePreset = {
   name: 'Vibrant',
   colors: {
     primary: {
-      50: '#fdf4ff',
-      100: '#fae8ff',
-      200: '#f5d0fe',
-      300: '#f0abfc',
-      400: '#e879f9',
-      500: '#d946ef', // Vibrant magenta
-      600: '#c026d3',
-      700: '#a21caf',
-      800: '#86198f',
-      900: '#701a75',
-      950: '#4a044e'
+      50: '#faf5ff',
+      100: '#f3e8ff',
+      200: '#e9d5ff',
+      300: '#d8b4fe',
+      400: '#c084fc',
+      500: '#a855f7', // Electric purple
+      600: '#9333ea',
+      700: '#7c3aed',
+      800: '#6b21a8',
+      900: '#581c87',
+      950: '#3b0764'
     },
     secondary: {
       50: '#f0fdfa',
@@ -375,8 +375,8 @@ export const vibrantTheme: ThemePreset = {
   },
   typography: {
     fontFamily: {
-      sans: ['Poppins', 'system-ui', 'sans-serif'],
-      mono: ['Fira Code', 'Consolas', 'monospace']
+      sans: ['Comic Neue', 'Quicksand', 'Nunito', 'system-ui', 'sans-serif'],
+      mono: ['Fira Code', 'JetBrains Mono', 'monospace']
     },
     fontSize: {
       xs: '0.75rem',
@@ -419,41 +419,41 @@ export const vibrantTheme: ThemePreset = {
   },
   borderRadius: {
     none: '0',
-    sm: '0.25rem',   // More pronounced
-    base: '0.5rem',
-    md: '0.75rem',
-    lg: '1rem',      // Bold rounded corners
-    xl: '1.25rem',
-    '2xl': '1.5rem',
+    sm: '0.75rem',   // Very rounded
+    base: '1rem',    // Bold rounding
+    md: '1.25rem',
+    lg: '1.5rem',    // Super rounded
+    xl: '2rem',
+    '2xl': '2.5rem', // Extreme rounding
     full: '9999px'
   },
   shadows: {
     none: 'none',
-    sm: '0 2px 4px 0 rgb(236 72 153 / 0.1)',
-    base: '0 4px 6px -1px rgb(236 72 153 / 0.1), 0 2px 4px -2px rgb(236 72 153 / 0.1)',
-    md: '0 10px 15px -3px rgb(236 72 153 / 0.1), 0 4px 6px -4px rgb(236 72 153 / 0.1)',
-    lg: '0 20px 25px -5px rgb(236 72 153 / 0.1), 0 8px 10px -6px rgb(236 72 153 / 0.1)',
-    xl: '0 25px 50px -12px rgb(236 72 153 / 0.25), 0 8px 16px -8px rgb(236 72 153 / 0.1)',
-    '2xl': '0 50px 100px -20px rgb(236 72 153 / 0.25)'
+    sm: '0 4px 8px 0 rgb(168 85 247 / 0.15)', // Purple shadows
+    base: '0 8px 16px -2px rgb(168 85 247 / 0.15), 0 4px 8px -2px rgb(168 85 247 / 0.1)',
+    md: '0 16px 24px -4px rgb(168 85 247 / 0.15), 0 8px 16px -4px rgb(168 85 247 / 0.1)',
+    lg: '0 24px 32px -6px rgb(168 85 247 / 0.2), 0 12px 24px -6px rgb(168 85 247 / 0.1)',
+    xl: '0 32px 48px -8px rgb(168 85 247 / 0.25), 0 16px 32px -8px rgb(168 85 247 / 0.15)',
+    '2xl': '0 48px 80px -16px rgb(168 85 247 / 0.3)'
   }
 } as const
 
-// 4. Corporate Theme - Professional, trustworthy, reliable
+// 4. Corporate Theme - Professional Green (Spotify/WhatsApp style)
 export const corporateTheme: ThemePreset = {
   name: 'Corporate',
   colors: {
     primary: {
-      50: '#f0f9ff',
-      100: '#e0f2fe',
-      200: '#bae6fd',
-      300: '#7dd3fc',
-      400: '#38bdf8',
-      500: '#0ea5e9', // Professional blue
-      600: '#0284c7',
-      700: '#0369a1',
-      800: '#075985',
-      900: '#0c4a6e',
-      950: '#082f49'
+      50: '#f0fdf4',
+      100: '#dcfce7',
+      200: '#bbf7d0',
+      300: '#86efac',
+      400: '#4ade80',
+      500: '#22c55e', // Professional green
+      600: '#16a34a',
+      700: '#15803d',
+      800: '#166534',
+      900: '#14532d',
+      950: '#052e16'
     },
     secondary: {
       50: '#f8fafc',
@@ -519,8 +519,8 @@ export const corporateTheme: ThemePreset = {
   },
   typography: {
     fontFamily: {
-      sans: ['Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
-      mono: ['Source Code Pro', 'Consolas', 'monospace']
+      sans: ['IBM Plex Sans', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+      mono: ['IBM Plex Mono', 'Source Code Pro', 'Consolas', 'monospace']
     },
     fontSize: {
       xs: '0.75rem',
@@ -573,12 +573,12 @@ export const corporateTheme: ThemePreset = {
   },
   shadows: {
     none: 'none',
-    sm: '0 1px 2px 0 rgb(0 0 0 / 0.05)',
-    base: '0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)',
-    md: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
-    lg: '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)',
-    xl: '0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)',
-    '2xl': '0 25px 50px -12px rgb(0 0 0 / 0.15)'
+    sm: '0 2px 4px 0 rgb(34 197 94 / 0.1)', // Green shadows
+    base: '0 4px 8px -1px rgb(34 197 94 / 0.1), 0 2px 4px -2px rgb(34 197 94 / 0.05)',
+    md: '0 8px 16px -2px rgb(34 197 94 / 0.1), 0 4px 8px -4px rgb(34 197 94 / 0.05)',
+    lg: '0 16px 24px -4px rgb(34 197 94 / 0.1), 0 8px 16px -6px rgb(34 197 94 / 0.05)',
+    xl: '0 24px 32px -6px rgb(34 197 94 / 0.15), 0 12px 24px -8px rgb(34 197 94 / 0.1)',
+    '2xl': '0 32px 64px -12px rgb(34 197 94 / 0.2)'
   }
 } as const
 

@@ -58,21 +58,19 @@ export const WithLabel: Story = {
 
 export const Small: Story = {
   args: {
-    size: 'sm',
     placeholder: 'Quick search...',
   },
 }
 
 export const Large: Story = {
   args: {
-    size: 'lg',
     placeholder: 'Search for anything...',
   },
 }
 
 export const Ghost: Story = {
   args: {
-    variant: 'ghost',
+    variant: 'default',
     placeholder: 'Search...',
   },
 }
@@ -109,10 +107,10 @@ export const WithValue: Story = {
 export const AllSizes: Story = {
   render: () => (
     <div className="space-y-4 w-80">
-      <SearchField size="sm" placeholder="Small search" />
-      <SearchField size="md" placeholder="Medium search" />
-      <SearchField size="lg" placeholder="Large search" />
-      <SearchField size="xl" placeholder="Extra large search" />
+      <SearchField placeholder="Small search" />
+      <SearchField placeholder="Medium search" />
+      <SearchField placeholder="Large search" />
+      <SearchField placeholder="Extra large search" />
     </div>
   ),
   parameters: {
@@ -127,7 +125,7 @@ export const AllVariants: Story = {
       <SearchField variant="success" placeholder="Success search" />
       <SearchField variant="warning" placeholder="Warning search" />
       <SearchField variant="error" placeholder="Error search" />
-      <SearchField variant="ghost" placeholder="Ghost search" />
+      <SearchField variant="default" placeholder="Default search" />
     </div>
   ),
   parameters: {

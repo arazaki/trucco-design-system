@@ -17,23 +17,8 @@ const meta = {
   argTypes: {
     variant: {
       control: 'select',
-      options: ['default', 'success', 'warning', 'error', 'ghost'],
+      options: ['default', 'success', 'warning', 'error'],
       description: 'The visual style variant of the input',
-    },
-    size: {
-      control: 'select',
-      options: ['sm', 'md', 'lg', 'xl'],
-      description: 'The size of the input',
-    },
-    radius: {
-      control: 'select',
-      options: ['none', 'sm', 'md', 'lg', 'xl', 'full'],
-      description: 'Border radius variant',
-    },
-    shadow: {
-      control: 'select',
-      options: ['none', 'sm', 'md', 'lg'],
-      description: 'Shadow intensity',
     },
     disabled: {
       control: 'boolean',
@@ -105,7 +90,7 @@ export const Warning: Story = {
 export const Ghost: Story = {
   args: {
     placeholder: 'Search...',
-    variant: 'ghost',
+    variant: 'default',
   },
 }
 
@@ -113,7 +98,6 @@ export const Small: Story = {
   args: {
     label: 'Small Input',
     placeholder: 'Small input',
-    size: 'sm',
   },
 }
 
@@ -121,7 +105,6 @@ export const Large: Story = {
   args: {
     label: 'Large Input',
     placeholder: 'Large input',
-    size: 'lg',
   },
 }
 
@@ -129,7 +112,6 @@ export const ExtraLarge: Story = {
   args: {
     label: 'Extra Large Input',
     placeholder: 'Extra large input',
-    size: 'xl',
   },
 }
 
@@ -174,7 +156,7 @@ export const VariantShowcase: Story = {
       <Input placeholder="Success input" variant="success" />
       <Input placeholder="Warning input" variant="warning" />
       <Input placeholder="Error input" variant="error" />
-      <Input placeholder="Ghost input" variant="ghost" />
+      <Input placeholder="Default input" variant="default" />
     </div>
   ),
   parameters: {
@@ -205,10 +187,10 @@ export const TextareaWithError: Story = {
 export const AllSizes: Story = {
   render: () => (
     <div className="grid grid-cols-1 gap-4 w-80">
-      <Input placeholder="Small" size="sm" label="Small" />
-      <Input placeholder="Medium" size="md" label="Medium" />
-      <Input placeholder="Large" size="lg" label="Large" />
-      <Input placeholder="Extra Large" size="xl" label="Extra Large" />
+      <Input placeholder="Small" label="Small" />
+      <Input placeholder="Medium" label="Medium" />
+      <Input placeholder="Large" label="Large" />
+      <Input placeholder="Extra Large" label="Extra Large" />
     </div>
   ),
   parameters: {

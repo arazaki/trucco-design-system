@@ -157,6 +157,9 @@ export const WithDisabledItems: Story = {
 }
 
 export const AllVariants: Story = {
+  args: {
+    items: [],
+  },
   render: () => (
     <div className="space-y-8 w-full max-w-2xl">
       <div>
@@ -186,6 +189,9 @@ export const AllVariants: Story = {
 }
 
 export const AppSidebar: Story = {
+  args: {
+    items: [],
+  },
   render: () => (
     <div className="flex h-96 bg-background-secondary rounded-lg overflow-hidden">
       <div className="w-64 bg-white border-r border-border-primary p-4">

@@ -57,12 +57,16 @@ const darkTokens: DesignTokens = {
   },
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function deepMerge(target: any, source: any): any {
   const result = { ...target }
   
   for (const key in source) {
     if (source[key] && typeof source[key] === 'object' && !Array.isArray(source[key])) {
-      result[key] = deepMerge(target[key] || {}, source[key])
+      result[key] = deepMerge(
+        target[key] || {},
+        source[key]
+      )
     } else {
       result[key] = source[key]
     }
@@ -160,7 +164,7 @@ export function ThemeProvider({
   storageKey = 'trucco-theme',
   customTokens = {},
 }: ThemeProviderProps) {
-  const storeRef = useRef<ReturnType<typeof createThemeStore>>()
+  const storeRef = useRef<ReturnType<typeof createThemeStore> | null>(null)
 
   // Create store only once per provider instance
   if (!storeRef.current) {
@@ -218,6 +222,7 @@ function ThemeHydration({ children }: { children: React.ReactNode }) {
       : deepMerge(defaultTokens, customTokens)
 
     // Set CSS custom properties for runtime access
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const setCSSProperty = (obj: any, prefix = '') => {
       for (const [key, value] of Object.entries(obj)) {
         if (typeof value === 'object' && value !== null && !Array.isArray(value)) {

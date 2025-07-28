@@ -247,7 +247,6 @@ export const DocumentationLayout: Story = {
         showSearch={true}
         searchProps={{
           placeholder: 'Search docs...',
-          size: 'sm',
         }}
         actions={
           <>

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs'
 import { Button } from '../components/atoms/button'
-import { Input } from '../components/atoms/input'
+import { Input, Textarea } from '../components/atoms/input'
 import { Text } from '../components/atoms/text'
 import { SearchField } from '../components/molecules/search-field'
 import { FormGroup } from '../components/molecules/form-group'
@@ -103,15 +103,13 @@ export const AllComponents: Story = {
             placeholder="Enter your full name"
           />
         </div>
-        <Input 
+        <Textarea 
           label="Message" 
           placeholder="Enter your message..."
-          variant="textarea"
           rows={3}
         />
         <SearchField 
           placeholder="Search components..."
-          icon={<SearchIcon />}
         />
       </section>
 
@@ -120,8 +118,8 @@ export const AllComponents: Story = {
         <Text variant="h3">Complex Components</Text>
         
         <FormGroup
-          title="Account Settings"
-          description="Configure your account preferences and notification settings."
+          label="Account Settings"
+          helperText="Configure your account preferences and notification settings."
         >
           <div className="space-y-4">
             <Input label="Username" placeholder="johndoe" />
@@ -147,51 +145,82 @@ export const AllComponents: Story = {
         <Text variant="h3">Color System</Text>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div>
-            <Text variant="label" className="mb-2 block">Primary Colors</Text>
-            <div className="flex gap-1">
-              {[100, 300, 500, 700, 900].map((shade) => (
-                <div
-                  key={shade}
-                  className="w-10 h-10 rounded border flex items-center justify-center text-xs font-medium"
-                  style={{ 
-                    backgroundColor: `var(--primary-${shade})`,
-                    color: shade >= 500 ? 'white' : 'var(--primary-900)',
-                    borderColor: 'var(--border)'
-                  }}
-                >
-                  {shade}
-                </div>
-              ))}
-            </div>
-          </div>
-          
-          <div>
-            <Text variant="label" className="mb-2 block">Neutral Colors</Text>
-            <div className="flex gap-1">
-              {[100, 300, 500, 700, 900].map((shade) => (
-                <div
-                  key={shade}
-                  className="w-10 h-10 rounded border flex items-center justify-center text-xs font-medium"
-                  style={{ 
-                    backgroundColor: `var(--neutral-${shade})`,
-                    color: shade >= 500 ? 'white' : 'var(--neutral-900)',
-                    borderColor: 'var(--border)'
-                  }}
-                >
-                  {shade}
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <Text variant="label" className="mb-2 block">Semantic Colors</Text>
+            <Text variant="label" className="mb-2 block">Primary & Interactive</Text>
             <div className="space-y-2">
               <div className="flex gap-2 items-center">
                 <div
                   className="w-8 h-8 rounded border"
                   style={{ 
-                    backgroundColor: 'var(--success-500)',
+                    backgroundColor: 'var(--primary-subtle)',
+                    borderColor: 'var(--border)'
+                  }}
+                />
+                <Text variant="bodySmall">Primary Subtle</Text>
+              </div>
+              <div className="flex gap-2 items-center">
+                <div
+                  className="w-8 h-8 rounded border"
+                  style={{ 
+                    backgroundColor: 'var(--primary)',
+                    borderColor: 'var(--border)'
+                  }}
+                />
+                <Text variant="bodySmall">Primary</Text>
+              </div>
+              <div className="flex gap-2 items-center">
+                <div
+                  className="w-8 h-8 rounded border"
+                  style={{ 
+                    backgroundColor: 'var(--primary-emphasis)',
+                    borderColor: 'var(--border)'
+                  }}
+                />
+                <Text variant="bodySmall">Primary Emphasis</Text>
+              </div>
+            </div>
+          </div>
+          
+          <div>
+            <Text variant="label" className="mb-2 block">Surface & Text</Text>
+            <div className="space-y-2">
+              <div className="flex gap-2 items-center">
+                <div
+                  className="w-8 h-8 rounded border bg-background"
+                  style={{ 
+                    borderColor: 'var(--border)'
+                  }}
+                />
+                <Text variant="bodySmall">Background</Text>
+              </div>
+              <div className="flex gap-2 items-center">
+                <div
+                  className="w-8 h-8 rounded border bg-secondary"
+                  style={{ 
+                    borderColor: 'var(--border)'
+                  }}
+                />
+                <Text variant="bodySmall">Secondary Surface</Text>
+              </div>
+              <div className="flex gap-2 items-center">
+                <div
+                  className="w-8 h-8 rounded border bg-accent"
+                  style={{ 
+                    borderColor: 'var(--border)'
+                  }}
+                />
+                <Text variant="bodySmall">Accent</Text>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <Text variant="label" className="mb-2 block">Semantic Feedback</Text>
+            <div className="space-y-2">
+              <div className="flex gap-2 items-center">
+                <div
+                  className="w-8 h-8 rounded border"
+                  style={{ 
+                    backgroundColor: 'var(--success)',
                     borderColor: 'var(--border)'
                   }}
                 />
@@ -201,7 +230,7 @@ export const AllComponents: Story = {
                 <div
                   className="w-8 h-8 rounded border"
                   style={{ 
-                    backgroundColor: 'var(--warning-500)',
+                    backgroundColor: 'var(--warning)',
                     borderColor: 'var(--border)'
                   }}
                 />
@@ -209,9 +238,8 @@ export const AllComponents: Story = {
               </div>
               <div className="flex gap-2 items-center">
                 <div
-                  className="w-8 h-8 rounded border"
+                  className="w-8 h-8 rounded border bg-destructive"
                   style={{ 
-                    backgroundColor: 'var(--error-500)',
                     borderColor: 'var(--border)'
                   }}
                 />
@@ -227,9 +255,8 @@ export const AllComponents: Story = {
         <Text variant="h3">Shadows & Border Radius</Text>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div 
-            className="p-4 bg-white border text-center"
+            className="p-4 bg-background border text-center"
             style={{ 
-              backgroundColor: 'var(--surface)',
               borderColor: 'var(--border)',
               borderRadius: 'var(--radius-sm)',
               boxShadow: 'var(--shadow-sm)'
@@ -238,20 +265,18 @@ export const AllComponents: Story = {
             <Text variant="bodySmall">Small Shadow</Text>
           </div>
           <div 
-            className="p-4 bg-white border text-center"
+            className="p-4 bg-background border text-center"
             style={{ 
-              backgroundColor: 'var(--surface)',
               borderColor: 'var(--border)',
-              borderRadius: 'var(--radius-base)',
-              boxShadow: 'var(--shadow-base)'
+              borderRadius: 'var(--radius-md)',
+              boxShadow: 'var(--shadow-md)'
             }}
           >
-            <Text variant="bodySmall">Base Shadow</Text>
+            <Text variant="bodySmall">Medium Shadow</Text>
           </div>
           <div 
-            className="p-4 bg-white border text-center"
+            className="p-4 bg-background border text-center"
             style={{ 
-              backgroundColor: 'var(--surface)',
               borderColor: 'var(--border)',
               borderRadius: 'var(--radius-lg)',
               boxShadow: 'var(--shadow-lg)'
@@ -260,9 +285,8 @@ export const AllComponents: Story = {
             <Text variant="bodySmall">Large Shadow</Text>
           </div>
           <div 
-            className="p-4 bg-white border text-center"
+            className="p-4 bg-background border text-center"
             style={{ 
-              backgroundColor: 'var(--surface)',
               borderColor: 'var(--border)',
               borderRadius: 'var(--radius-xl)',
               boxShadow: 'var(--shadow-xl)'
@@ -326,15 +350,13 @@ export const FormShowcase: Story = {
           placeholder="Enter your password"
           type="password"
         />
-        <Input 
+        <Textarea 
           label="Bio" 
           placeholder="Tell us about yourself..."
-          variant="textarea"
           rows={4}
         />
         <SearchField 
           placeholder="Search anything..."
-          icon={<SearchIcon />}
         />
         <div className="flex gap-3">
           <Button variant="primary" fullWidth>Submit</Button>

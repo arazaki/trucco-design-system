@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Text } from '../atoms/text'
-import { cn } from '@/lib/utils'
+import { cn } from '../../lib/utils/cn'
 
 export interface ContentLayoutProps extends React.HTMLAttributes<HTMLDivElement> {
   title?: string

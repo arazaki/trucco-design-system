@@ -1,8 +1,8 @@
 import * as React from 'react'
-// import { Button } from '../atoms/button' // Not used currently
+import { Button } from '../atoms/button'
 import { SearchField } from '../molecules/search-field'
 import { Text } from '../atoms/text'
-import { cn } from '@/lib/utils'
+import { cn } from '../../lib/utils/cn'
 
 export interface HeaderProps extends React.HTMLAttributes<HTMLElement> {
   logo?: React.ReactNode
@@ -65,7 +65,8 @@ const Header = React.forwardRef<HTMLElement, HeaderProps>(
                 <div className="hidden sm:block">
                   <SearchField
                     placeholder="Search..."
-                    className="w-48 lg:w-64 h-8 text-sm"
+                    size="sm"
+                    className="w-48 lg:w-64"
                     {...searchProps}
                   />
                 </div>
@@ -91,7 +92,7 @@ const Header = React.forwardRef<HTMLElement, HeaderProps>(
             <div className="sm:hidden mt-4">
               <SearchField
                 placeholder="Search..."
-                className="h-8 text-sm"
+                size="sm"
                 {...searchProps}
               />
             </div>

@@ -31,11 +31,6 @@ const meta = {
       options: ['none', 'sm', 'md', 'lg', 'xl', 'full'],
       description: 'Border radius variant',
     },
-    shadow: {
-      control: 'select',
-      options: ['none', 'sm', 'md', 'lg', 'xl'],
-      description: 'Shadow intensity',
-    },
     loading: {
       control: 'boolean',
       description: 'Shows loading spinner when true',
