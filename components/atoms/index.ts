@@ -10,6 +10,15 @@ export type { InputProps, TextareaProps } from './input'
 export { Text } from './text'
 export type { TextProps } from './text'
 
+export { Badge } from './badge'
+export type { BadgeProps } from './badge'
+
+export { Avatar, AvatarImage, AvatarFallback } from './avatar'
+export type { AvatarProps, AvatarImageProps, AvatarFallbackProps } from './avatar'
+
+export { Switch } from './switch'
+export type { SwitchProps } from './switch'
+
 export {
   PlusIcon,
   SearchIcon,
