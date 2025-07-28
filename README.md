@@ -238,8 +238,11 @@ npm run build:lib
 ## 📚 Documentation
 
 - **Storybook**: Interactive component documentation with live examples
-- **Claude Documentation**: Comprehensive usage guide in `/docs/CLAUDE.md`
-- **Component Driven Development**: CDD methodology guide in `/docs/COMPONENT-DRIVEN-DEVELOPMENT.md`
+- **Claude Documentation**: Comprehensive usage guide in [`/docs/CLAUDE.md`](docs/CLAUDE.md)
+- **Component Creation Guide**: Step-by-step methodology in [`/docs/COMPONENT_CREATION_GUIDE.md`](docs/COMPONENT_CREATION_GUIDE.md)
+- **Component Checklist**: Quality assurance checklist in [`/docs/COMPONENT_CHECKLIST.md`](docs/COMPONENT_CHECKLIST.md)
+- **shadcn/ui Integration**: Architecture patterns in [`/docs/SHADCN_INTEGRATION.md`](docs/SHADCN_INTEGRATION.md)
+- **Component Driven Development**: CDD methodology guide in [`/docs/COMPONENT-DRIVEN-DEVELOPMENT.md`](docs/COMPONENT-DRIVEN-DEVELOPMENT.md)
 
 ## 🤝 Contributing
 

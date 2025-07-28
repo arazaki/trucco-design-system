@@ -216,6 +216,270 @@ Button.displayName = 'Button'
 export { Button, truccoButtonVariants }
 ```
 
+## Advanced Component Wrapper Patterns
+
+### Pattern 1: Variant Mapping with Semantic Enhancement
+
+**Badge Component Example**:
+```typescript
+// components/atoms/badge.tsx
+import { Badge as ShadcnBadge } from '@/components/ui/badge'
+
+// Map Trucco semantic variants to shadcn variants
+const variantMapping = {
+  primary: 'default',
+  secondary: 'secondary',
+  tertiary: 'outline',
+  success: 'default', // Will use theme override
+  warning: 'default', // Will use theme override
+  error: 'destructive',
+} as const
+
+// Enhanced variants that extend shadcn with semantic theming
+const truccoBadgeVariants = cva('', {
+  variants: {
+    truccoVariant: {
+      primary: 'bg-primary text-primary-foreground',
+      secondary: 'bg-secondary text-secondary-foreground',
+      success: 'bg-[var(--success)] text-white',
+      warning: 'bg-[var(--warning)] text-white',
+      error: 'bg-destructive text-destructive-foreground',
+    }
+  }
+})
+
+const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
+  ({ variant = 'primary', className, ...props }, ref) => {
+    const useTruccoVariant = variant && !['default', 'destructive'].includes(variant)
+    const mappedVariant = variantMapping[variant] || 'default'
+
+    return (
+      <ShadcnBadge
+        ref={ref}
+        className={cn(
+          // Apply Trucco variants if using semantic variants
+          useTruccoVariant && truccoBadgeVariants({ 
+            truccoVariant: variant
+          }),
+          className
+        )}
+        variant={mappedVariant}
+        {...props}
+      />
+    )
+  }
+)
+```
+
+### Pattern 2: Compound Components with Enhanced Features
+
+**Avatar Component Example**:
+```typescript
+// components/atoms/avatar.tsx
+import { Avatar as ShadcnAvatar, AvatarImage as ShadcnAvatarImage, AvatarFallback as ShadcnAvatarFallback } from '@/components/ui/avatar'
+
+// Size variants for the main avatar container
+const truccoAvatarVariants = cva('relative inline-flex', {
+  variants: {
+    size: {
+      xs: 'h-6 w-6 text-xs',
+      sm: 'h-8 w-8 text-sm',
+      md: 'h-10 w-10 text-base',
+      lg: 'h-12 w-12 text-lg',
+      xl: 'h-16 w-16 text-xl',
+      '2xl': 'h-20 w-20 text-2xl',
+    },
+    shape: {
+      circle: 'rounded-full',
+      square: 'rounded-none',
+      rounded: 'rounded-lg',
+    },
+  },
+})
+
+// Status indicator positioning variants
+const statusVariants = cva('absolute rounded-full border-2 border-background', {
+  variants: {
+    size: {
+      xs: 'h-2 w-2 -bottom-0.5 -right-0.5',
+      sm: 'h-2.5 w-2.5 -bottom-0.5 -right-0.5',
+      md: 'h-3 w-3 -bottom-0.5 -right-0.5',
+      lg: 'h-3.5 w-3.5 -bottom-1 -right-1',
+      xl: 'h-4 w-4 -bottom-1 -right-1',
+      '2xl': 'h-5 w-5 -bottom-1 -right-1',
+    },
+    status: {
+      online: 'bg-green-500',
+      offline: 'bg-gray-400',
+      busy: 'bg-red-500',
+      away: 'bg-yellow-500',
+    },
+  },
+})
+
+// Main Avatar component with auto-generated initials
+const Avatar = React.forwardRef<HTMLDivElement, AvatarProps>(
+  ({ 
+    size = 'sm',
+    shape = 'circle',
+    src,
+    alt,
+    fallback,
+    status,
+    showStatus = false,
+    children,
+    ...props 
+  }, ref) => {
+    // Auto-generate initials from alt text
+    const initials = React.useMemo(() => {
+      if (fallback) return fallback
+      if (alt) {
+        return alt
+          .split(' ')
+          .map(name => name.charAt(0).toUpperCase())
+          .slice(0, 2)
+          .join('')
+      }
+      return '?'
+    }, [fallback, alt])
+
+    return (
+      <ShadcnAvatar
+        ref={ref}
+        className={cn(truccoAvatarVariants({ size, shape }))}
+        {...props}
+      >
+        {src && <AvatarImage src={src} alt={alt} />}
+        <AvatarFallback theme={theme}>
+          {children || initials}
+        </AvatarFallback>
+        
+        {/* Enhanced status indicator */}
+        {showStatus && status && (
+          <div className={cn(statusVariants({ size, status }))} />
+        )}
+      </ShadcnAvatar>
+    )
+  }
+)
+
+// Enhanced compound components
+const AvatarFallback = React.forwardRef<HTMLDivElement, AvatarFallbackProps>(
+  ({ theme = 'default', className, ...props }, ref) => {
+    return (
+      <ShadcnAvatarFallback
+        ref={ref}
+        className={cn(
+          'flex size-full items-center justify-center font-medium',
+          theme === 'primary' && 'bg-primary text-primary-foreground',
+          theme === 'secondary' && 'bg-secondary text-secondary-foreground',
+          theme === 'success' && 'bg-[var(--success)] text-white',
+          className
+        )}
+        {...props}
+      />
+    )
+  }
+)
+```
+
+### Pattern 3: Form Integration with Enhanced Accessibility
+
+**Switch Component Example**:
+```typescript
+// components/atoms/switch.tsx
+import { Switch as ShadcnSwitch } from '@/components/ui/switch'
+
+const Switch = React.forwardRef<React.ElementRef<typeof ShadcnSwitch>, SwitchProps>(
+  ({ 
+    label,
+    description,
+    error,
+    required = false,
+    id,
+    ...props 
+  }, ref) => {
+    // Auto-generate IDs for proper accessibility
+    const generatedId = React.useId()
+    const switchId = id || generatedId
+    const descriptionId = description ? `${switchId}-description` : undefined
+    const errorId = error ? `${switchId}-error` : undefined
+
+    // Enhanced form integration
+    if (label || description || error) {
+      return (
+        <div className="flex items-start space-x-3">
+          <ShadcnSwitch
+            ref={ref}
+            id={switchId}
+            aria-describedby={cn(descriptionId, errorId)}
+            aria-invalid={error ? 'true' : undefined}
+            {...props}
+          />
+          
+          <div className="flex-1 space-y-1">
+            {label && (
+              <label
+                htmlFor={switchId}
+                className={cn(
+                  'text-sm font-medium leading-none cursor-pointer',
+                  error ? 'text-destructive' : 'text-foreground',
+                  props.disabled && 'opacity-50 cursor-not-allowed'
+                )}
+              >
+                {label}
+                {required && <span className="text-destructive ml-1">*</span>}
+              </label>
+            )}
+            
+            {description && (
+              <p 
+                id={descriptionId}
+                className={cn(
+                  'text-sm',
+                  error ? 'text-destructive' : 'text-muted-foreground'
+                )}
+              >
+                {description}
+              </p>
+            )}
+            
+            {error && (
+              <p 
+                id={errorId}
+                className="text-sm text-destructive"
+                role="alert"
+              >
+                {error}
+              </p>
+            )}
+          </div>
+        </div>
+      )
+    }
+
+    // Simple switch without form integration
+    return <ShadcnSwitch ref={ref} id={switchId} {...props} />
+  }
+)
+```
+
+### Pattern 4: TypeScript Interface Design
+
+**Handling Variant Conflicts**:
+```typescript
+// Use Omit to prevent TypeScript conflicts
+export interface ComponentProps
+  extends Omit<React.ComponentProps<typeof ShadcnComponent>, 'variant'>,
+    Omit<VariantProps<typeof truccoComponentVariants>, 'truccoVariant'> {
+  // Explicit variant definitions prevent conflicts
+  variant?: 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'error'
+  size?: 'sm' | 'md' | 'lg'
+  theme?: 'semantic' | 'red' | 'blue' | 'purple' | 'green'
+  // Component-specific enhancements
+}
+```
+
 ## Component Examples
 
 ### Enhanced Input Component

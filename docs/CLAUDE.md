@@ -356,6 +356,203 @@ const { theme, setTheme } = useTheme()
 </Button>
 ```
 
+## Component Creation Methodology
+
+> **📖 Complete Guide**: See `/docs/COMPONENT_CREATION_GUIDE.md` for comprehensive step-by-step instructions.
+
+### Systematic Component Creation Approach
+
+When creating new components for the Trucco Design System, follow this proven methodology:
+
+#### Phase 1: Research & Planning
+1. **Study Existing Patterns**: Read `components/atoms/button.tsx`, `badge.tsx`, `avatar.tsx`, `switch.tsx`
+2. **Check shadcn/ui Foundation**: Verify if `components/ui/[component].tsx` exists
+3. **Review Documentation**: Study `SHADCN_INTEGRATION.md` and this guide
+
+#### Phase 2: Implementation Strategy
+
+**Core Pattern - shadcn/ui Wrapper Strategy**:
+```typescript
+'use client'
+import { [Component] as Shadcn[Component] } from '@/components/ui/[component]'
+import { cva, type VariantProps } from 'class-variance-authority'
+
+// Enhanced variants extending shadcn with Trucco theming
+const trucco[Component]Variants = cva('', {
+  variants: {
+    variant: {
+      default: '', // shadcn default
+      primary: 'bg-primary text-primary-foreground',
+      secondary: 'bg-secondary text-secondary-foreground', 
+      success: 'bg-[var(--success)] text-white',
+      warning: 'bg-[var(--warning)] text-white',
+      error: 'bg-destructive text-white',
+    },
+    size: {
+      sm: '[small-styles]',
+      md: '[medium-styles]', // shadcn default
+      lg: '[large-styles]',
+    },
+  },
+  defaultVariants: { variant: 'default', size: 'md' },
+})
+
+// Type-safe interface with explicit variants
+export interface [Component]Props
+  extends Omit<React.ComponentProps<typeof Shadcn[Component]>, 'variant'>,
+    Omit<VariantProps<typeof trucco[Component]Variants>, 'truccoVariant'> {
+  variant?: 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'error'
+  size?: 'sm' | 'md' | 'lg'
+  theme?: 'semantic' | 'red' | 'blue' | 'purple' | 'green'
+}
+
+const [Component] = React.forwardRef<Element, [Component]Props>(
+  ({ variant = 'default', size = 'md', className, ...props }, ref) => {
+    const useTruccoVariant = variant && variant !== 'default'
+    
+    return (
+      <Shadcn[Component]
+        ref={ref}
+        className={cn(
+          useTruccoVariant && trucco[Component]Variants({ variant, size }),
+          className
+        )}
+        {...props}
+      />
+    )
+  }
+)
+```
+
+#### Phase 3: Component Architecture Patterns
+
+**1. Variant Mapping for Complex Components**:
+```typescript
+// Map Trucco semantic variants to shadcn variants
+const variantMapping = {
+  primary: 'default',
+  secondary: 'secondary',
+  tertiary: 'outline',
+  success: 'default', // Uses CSS override
+  warning: 'default', // Uses CSS override  
+  error: 'destructive',
+} as const
+
+// Use mapped variant for shadcn, Trucco variant for styling
+<ShadcnComponent
+  variant={variantMapping[variant] || 'default'}
+  className={cn(useTruccoVariant && truccoVariants({ variant }))}
+/>
+```
+
+**2. CSS Variable Integration**:
+```typescript
+// Use CSS variables for semantic colors
+variants: {
+  variant: {
+    success: 'bg-[var(--success)] text-white',
+    warning: 'bg-[var(--warning)] text-white',
+    primary: 'bg-primary text-primary-foreground', // Tailwind semantic
+  }
+}
+```
+
+**3. Form Integration Pattern**:
+```typescript
+// Enhanced form components with label/description/error
+interface FormComponentProps extends BaseProps {
+  label?: string
+  description?: string
+  error?: string
+  required?: boolean
+}
+
+// Auto-generate IDs and associate labels
+const generatedId = React.useId()
+const componentId = id || generatedId
+const descriptionId = description ? `${componentId}-description` : undefined
+const errorId = error ? `${componentId}-error` : undefined
+
+// Proper ARIA attributes
+<Component
+  id={componentId}
+  aria-describedby={cn(descriptionId, errorId)}
+  aria-invalid={error ? 'true' : undefined}
+  aria-required={required}
+/>
+```
+
+#### Phase 4: Storybook Documentation Pattern
+
+**Essential Stories Structure**:
+```typescript
+export const Default: Story = { args: {} }
+export const AllVariants: Story = { /* All semantic variants */ }
+export const AllSizes: Story = { /* All size variants */ }
+export const ThemeVariants: Story = { /* All theme colors */ }
+export const RealWorldExample: Story = { /* Contextual usage */ }
+```
+
+**Story Template**:
+```typescript
+const meta: Meta<typeof Component> = {
+  title: 'Atoms/Component',
+  component: Component,
+  parameters: {
+    layout: 'centered',
+    docs: {
+      description: {
+        component: 'Description with shadcn/ui foundation and Trucco enhancements.',
+      },
+    },
+  },
+  tags: ['autodocs'],
+  argTypes: {
+    variant: {
+      control: 'select',
+      options: ['default', 'primary', 'secondary', 'success', 'warning', 'error'],
+    },
+    // ... other controls
+  },
+}
+```
+
+#### Phase 5: Quality Assurance Checklist
+
+**Essential Steps**:
+1. ✅ **Export Integration**: Add component to `components/atoms/index.ts`
+2. ✅ **Type Safety**: Ensure proper TypeScript interfaces with explicit variants
+3. ✅ **Accessibility**: Include proper ARIA attributes and keyboard support
+4. ✅ **Storybook**: Create comprehensive stories with all variants
+5. ✅ **Code Quality**: Run `npm run lint` and `npm run build`
+6. ✅ **Real-world Examples**: Include contextual usage stories
+
+#### Recent Implementation Examples
+
+**Badge Component** (`components/atoms/badge.tsx`):
+- Wraps shadcn Badge with enhanced variants and icon support
+- Includes removable functionality with onRemove callback
+- Maps Trucco variants: `primary → default`, `error → destructive`
+
+**Avatar Component** (`components/atoms/avatar.tsx`):
+- Compound component pattern with Avatar.Image and Avatar.Fallback
+- Status indicator system with size-responsive positioning
+- Auto-generated initials from alt text with custom fallback override
+
+**Switch Component** (`components/atoms/switch.tsx`):
+- Form integration with label, description, and error support
+- Enhanced with semantic theming and size variants
+- Proper accessibility with auto-generated IDs and ARIA attributes
+
+### Key Success Patterns
+
+1. **Wrapper Strategy**: Always wrap shadcn/ui components, never replace
+2. **Semantic Enhancement**: Add Trucco's semantic variants while preserving shadcn defaults
+3. **Type Safety**: Use `Omit` to handle variant conflicts in TypeScript interfaces
+4. **Accessibility First**: Leverage shadcn's Radix UI foundation and enhance with proper ARIA
+5. **Documentation Driven**: Create comprehensive Storybook stories for all variants
+6. **Quality Gates**: Always run lint and build to ensure code quality
+
 ## Development Patterns
 
 ### Component Creation
