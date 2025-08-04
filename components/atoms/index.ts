@@ -19,6 +19,25 @@ export type { AvatarProps, AvatarImageProps, AvatarFallbackProps } from './avata
 export { Switch } from './switch'
 export type { SwitchProps } from './switch'
 
+export { 
+  Card, 
+  CardHeader, 
+  CardFooter, 
+  CardTitle, 
+  CardAction, 
+  CardDescription, 
+  CardContent,
+} from './card'
+export type { 
+  CardProps, 
+  CardHeaderProps, 
+  CardFooterProps, 
+  CardTitleProps, 
+  CardActionProps, 
+  CardDescriptionProps, 
+  CardContentProps,
+} from './card'
+
 export {
   PlusIcon,
   SearchIcon,
