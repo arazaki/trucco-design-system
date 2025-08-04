@@ -150,61 +150,11 @@ export interface DialogTitleProps extends React.ComponentProps<typeof ShadcnDial
 
 export interface DialogDescriptionProps extends React.ComponentProps<typeof ShadcnDialogDescription> {}
 
-const Dialog = React.forwardRef<
-  React.ElementRef<typeof ShadcnDialog>,
-  DialogProps
->(
-  ({ ...props }, ref) => {
-    return <ShadcnDialog ref={ref} {...props} />
-  }
-)
-Dialog.displayName = 'Dialog'
-
-const DialogTrigger = React.forwardRef<
-  React.ElementRef<typeof ShadcnDialogTrigger>,
-  DialogTriggerProps
->(
-  ({ ...props }, ref) => {
-    return <ShadcnDialogTrigger ref={ref} {...props} />
-  }
-)
-DialogTrigger.displayName = 'DialogTrigger'
-
-const DialogPortal = React.forwardRef<
-  React.ElementRef<typeof ShadcnDialogPortal>,
-  DialogPortalProps
->(
-  ({ ...props }, ref) => {
-    return <ShadcnDialogPortal ref={ref} {...props} />
-  }
-)
-DialogPortal.displayName = 'DialogPortal'
-
-const DialogClose = React.forwardRef<
-  React.ElementRef<typeof ShadcnDialogClose>,
-  DialogCloseProps
->(
-  ({ ...props }, ref) => {
-    return <ShadcnDialogClose ref={ref} {...props} />
-  }
-)
-DialogClose.displayName = 'DialogClose'
-
-const DialogOverlay = React.forwardRef<
-  React.ElementRef<typeof ShadcnDialogOverlay>,
-  DialogOverlayProps
->(
-  ({ className, ...props }, ref) => {
-    return (
-      <ShadcnDialogOverlay
-        ref={ref}
-        className={cn('', className)}
-        {...props}
-      />
-    )
-  }
-)
-DialogOverlay.displayName = 'DialogOverlay'
+const Dialog = ShadcnDialog
+const DialogTrigger = ShadcnDialogTrigger  
+const DialogPortal = ShadcnDialogPortal
+const DialogClose = ShadcnDialogClose
+const DialogOverlay = ShadcnDialogOverlay
 
 const DialogContent = React.forwardRef<
   React.ElementRef<typeof ShadcnDialogContent>,

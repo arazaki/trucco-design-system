@@ -65,7 +65,7 @@ const truccoAlertVariants = cva(
 )
 
 export interface AlertProps
-  extends Omit<React.ComponentProps<typeof ShadcnAlert>, 'className'>,
+  extends Omit<React.ComponentProps<typeof ShadcnAlert>, 'className' | 'variant'>,
     VariantProps<typeof truccoAlertVariants> {
   className?: string
   variant?: 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'error' | 'info' | 'destructive'

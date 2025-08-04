@@ -1,0 +1,70 @@
+'use client'
+import * as React from 'react'
+import { cva, type VariantProps } from 'class-variance-authority'
+import { Calendar as ShadcnCalendar } from '@/components/ui/calendar'
+import { cn } from '@/lib/utils'
+
+/**
+ * Trucco Enhanced Calendar Component
+ * 
+ * Wraps shadcn/ui Calendar with Trucco's semantic theming system and additional features.
+ * Provides enhanced calendar variants and semantic theming while leveraging
+ * shadcn's accessibility foundation and React Day Picker.
+ */
+
+const truccoCalendarVariants = cva(
+  '',
+  {
+    variants: {
+      variant: {
+        default: '',
+        primary: '[&_.rdp-day_selected]:bg-primary [&_.rdp-day_selected]:text-primary-foreground',
+        secondary: '[&_.rdp-day_selected]:bg-secondary [&_.rdp-day_selected]:text-secondary-foreground',
+        success: '[&_.rdp-day_selected]:bg-green-600 [&_.rdp-day_selected]:text-white',
+        warning: '[&_.rdp-day_selected]:bg-yellow-600 [&_.rdp-day_selected]:text-white',
+        error: '[&_.rdp-day_selected]:bg-destructive [&_.rdp-day_selected]:text-white',
+      },
+      size: {
+        sm: 'text-sm [&_.rdp-day]:h-7 [&_.rdp-day]:w-7',
+        md: 'text-sm [&_.rdp-day]:h-8 [&_.rdp-day]:w-8',
+        lg: 'text-base [&_.rdp-day]:h-9 [&_.rdp-day]:w-9',
+      },
+    },
+    defaultVariants: {
+      variant: 'default',
+      size: 'md',
+    },
+  }
+)
+
+export interface CalendarProps
+  extends Omit<React.ComponentProps<typeof ShadcnCalendar>, 'className'>,
+    VariantProps<typeof truccoCalendarVariants> {
+  className?: string
+  variant?: 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'error'
+  size?: 'sm' | 'md' | 'lg'
+}
+
+const Calendar = ({ 
+  className, 
+  variant = 'default',
+  size = 'md',
+  ...props 
+}: CalendarProps) => {
+  const useTruccoVariant = variant && variant !== 'default'
+  
+  return (
+    <ShadcnCalendar
+      className={cn(
+        truccoCalendarVariants({ 
+          variant: useTruccoVariant ? variant : 'default',
+          size,
+        }),
+        className
+      )}
+      {...props}
+    />
+  )
+}
+
+export { Calendar, truccoCalendarVariants }

@@ -45,7 +45,7 @@ const truccoSeparatorVariants = cva(
         xl: 'data-[orientation=horizontal]:h-1.5 data-[orientation=vertical]:w-1.5',
       },
       // Style variants
-      style: {
+      separatorStyle: {
         solid: '', // Default
         dashed: 'border-dashed bg-transparent data-[orientation=horizontal]:border-t data-[orientation=vertical]:border-l',
         dotted: 'border-dotted bg-transparent data-[orientation=horizontal]:border-t data-[orientation=vertical]:border-l',
@@ -55,19 +55,19 @@ const truccoSeparatorVariants = cva(
       variant: 'default',
       theme: 'semantic',
       size: 'sm',
-      style: 'solid',
+      separatorStyle: 'solid',
     },
   }
 )
 
 export interface SeparatorProps
-  extends Omit<React.ComponentProps<typeof ShadcnSeparator>, 'className'>,
+  extends Omit<React.ComponentProps<typeof ShadcnSeparator>, 'className' | 'style'>,
     VariantProps<typeof truccoSeparatorVariants> {
   className?: string
   variant?: 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'error' | 'info' | 'muted'
   theme?: 'semantic' | 'red' | 'blue' | 'purple' | 'green'
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
-  style?: 'solid' | 'dashed' | 'dotted'
+  separatorStyle?: 'solid' | 'dashed' | 'dotted'
 }
 
 // Enhanced Separator with text/label support
@@ -86,7 +86,7 @@ const Separator = React.forwardRef<
     variant = 'default',
     theme = 'semantic',
     size = 'sm',
-    style = 'solid',
+    separatorStyle = 'solid',
     ...props 
   }, ref) => {
     // Determine which variant system to use
@@ -101,10 +101,10 @@ const Separator = React.forwardRef<
             variant: useTruccoVariant ? variant : 'default',
             theme: theme === 'semantic' ? undefined : theme,
             size,
-            style,
+            separatorStyle: separatorStyle,
           }),
           // Handle dashed/dotted border color
-          style !== 'solid' && useTruccoVariant && {
+          separatorStyle !== 'solid' && useTruccoVariant && {
             'border-primary/20': variant === 'primary',
             'border-secondary/20': variant === 'secondary',
             'border-green-200 dark:border-green-800': variant === 'success',
@@ -114,7 +114,7 @@ const Separator = React.forwardRef<
             'border-muted-foreground/20': variant === 'muted',
           },
           // Handle theme colors for dashed/dotted
-          style !== 'solid' && theme !== 'semantic' && {
+          separatorStyle !== 'solid' && theme !== 'semantic' && {
             'border-red-200 dark:border-red-800': theme === 'red',
             'border-blue-200 dark:border-blue-800': theme === 'blue',
             'border-purple-200 dark:border-purple-800': theme === 'purple',
@@ -140,7 +140,7 @@ const LabeledSeparator = React.forwardRef<
     variant = 'default',
     theme = 'semantic',
     size = 'sm',
-    style = 'solid',
+    separatorStyle = 'solid',
     className,
     ...props 
   }, ref) => {
@@ -151,7 +151,7 @@ const LabeledSeparator = React.forwardRef<
           variant={variant}
           theme={theme}
           size={size}
-          style={style}
+          separatorStyle={separatorStyle}
           className={className}
           orientation="horizontal"
           {...props}
@@ -188,7 +188,7 @@ const LabeledSeparator = React.forwardRef<
           variant={variant}
           theme={theme}
           size={size}
-          style={style}
+          separatorStyle={separatorStyle}
           orientation="horizontal"
           {...props}
         />

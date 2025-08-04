@@ -99,35 +99,9 @@ export interface EnhancedSelectProps extends SelectProps {
   children: React.ReactNode
 }
 
-const Select = React.forwardRef<
-  React.ElementRef<typeof ShadcnSelect>,
-  SelectProps
->(
-  ({ ...props }, ref) => {
-    return <ShadcnSelect ref={ref} {...props} />
-  }
-)
-Select.displayName = 'Select'
-
-const SelectGroup = React.forwardRef<
-  React.ElementRef<typeof ShadcnSelectGroup>,
-  SelectGroupProps
->(
-  ({ ...props }, ref) => {
-    return <ShadcnSelectGroup ref={ref} {...props} />
-  }
-)
-SelectGroup.displayName = 'SelectGroup'
-
-const SelectValue = React.forwardRef<
-  React.ElementRef<typeof ShadcnSelectValue>,
-  SelectValueProps
->(
-  ({ ...props }, ref) => {
-    return <ShadcnSelectValue ref={ref} {...props} />
-  }
-)
-SelectValue.displayName = 'SelectValue'
+const Select = ShadcnSelect
+const SelectGroup = ShadcnSelectGroup
+const SelectValue = ShadcnSelectValue
 
 const SelectTrigger = React.forwardRef<
   React.ElementRef<typeof ShadcnSelectTrigger>,
@@ -251,23 +225,19 @@ const SelectScrollDownButton = React.forwardRef<
 SelectScrollDownButton.displayName = 'SelectScrollDownButton'
 
 // Enhanced Select with form integration
-const EnhancedSelect = React.forwardRef<
-  React.ElementRef<typeof ShadcnSelect>,
-  EnhancedSelectProps
->(
-  ({ 
-    label,
-    placeholder,
-    helperText,
-    error,
-    required = false,
-    variant = 'default',
-    theme = 'semantic',
-    size = 'default',
-    fullWidth = true,
-    children,
-    ...props 
-  }, ref) => {
+const EnhancedSelect = ({ 
+  label,
+  placeholder,
+  helperText,
+  error,
+  required = false,
+  variant = 'default',
+  theme = 'semantic',
+  size = 'default',
+  fullWidth = true,
+  children,
+  ...props 
+}: EnhancedSelectProps) => {
     // Auto-generate IDs for proper accessibility
     const generatedId = React.useId()
     const selectId = props.name || generatedId
@@ -285,7 +255,7 @@ const EnhancedSelect = React.forwardRef<
           </label>
         )}
         
-        <Select ref={ref} {...props}>
+        <Select {...props}>
           <SelectTrigger 
             id={selectId}
             variant={effectiveVariant}
@@ -316,9 +286,7 @@ const EnhancedSelect = React.forwardRef<
         )}
       </div>
     )
-  }
-)
-EnhancedSelect.displayName = 'EnhancedSelect'
+}
 
 export {
   Select,
