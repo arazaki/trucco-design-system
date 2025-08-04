@@ -39,6 +39,70 @@ export type {
 } from './card'
 
 export {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogOverlay,
+  DialogPortal,
+  DialogTitle,
+  DialogTrigger,
+} from './dialog'
+export type {
+  DialogProps,
+  DialogCloseProps,
+  DialogContentProps,
+  DialogDescriptionProps,
+  DialogFooterProps,
+  DialogHeaderProps,
+  DialogOverlayProps,
+  DialogPortalProps,
+  DialogTitleProps,
+  DialogTriggerProps,
+} from './dialog'
+
+export {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectScrollDownButton,
+  SelectScrollUpButton,
+  SelectSeparator,
+  SelectTrigger,
+  SelectValue,
+  EnhancedSelect,
+} from './select'
+export type {
+  SelectProps,
+  SelectGroupProps,
+  SelectValueProps,
+  SelectTriggerProps,
+  SelectContentProps,
+  SelectLabelProps,
+  SelectItemProps,
+  SelectSeparatorProps,
+  SelectScrollUpButtonProps,
+  SelectScrollDownButtonProps,
+  EnhancedSelectProps,
+} from './select'
+
+export { Alert, AlertTitle, AlertDescription } from './alert'
+export type { AlertProps, AlertTitleProps, AlertDescriptionProps } from './alert'
+
+export { Checkbox, EnhancedCheckbox } from './checkbox'
+export type { CheckboxProps, EnhancedCheckboxProps } from './checkbox'
+
+export { Label, EnhancedLabel } from './label'
+export type { LabelProps, EnhancedLabelProps } from './label'
+
+export { Separator, LabeledSeparator } from './separator'
+export type { SeparatorProps, LabeledSeparatorProps } from './separator'
+
+export {
   PlusIcon,
   SearchIcon,
   ChevronRightIcon,
