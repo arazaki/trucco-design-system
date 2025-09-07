@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { cn } from '@/lib/utils'
+import { ErrorBoundary } from '../organisms/error-boundary'
 
 export interface PageLayoutProps extends React.HTMLAttributes<HTMLDivElement> {
   header?: React.ReactNode
@@ -11,6 +12,12 @@ export interface PageLayoutProps extends React.HTMLAttributes<HTMLDivElement> {
   stickyHeader?: boolean
   stickyFooter?: boolean
   fullHeight?: boolean
+  errorBoundary?: {
+    enabled?: boolean
+    title?: string
+    description?: string
+    onError?: (error: Error, errorInfo: React.ErrorInfo) => void
+  }
 }
 
 const PageLayout = React.forwardRef<HTMLDivElement, PageLayoutProps>(
@@ -25,6 +32,7 @@ const PageLayout = React.forwardRef<HTMLDivElement, PageLayoutProps>(
     stickyHeader = true,
     stickyFooter = false,
     fullHeight = true,
+    errorBoundary = { enabled: true },
     ...props
   }, ref) => {
     const sidebarWidths = {
@@ -68,7 +76,17 @@ const PageLayout = React.forwardRef<HTMLDivElement, PageLayoutProps>(
 
           {/* Main Content */}
           <main className="overflow-auto">
-            {main}
+            {errorBoundary?.enabled ? (
+              <ErrorBoundary
+                title={errorBoundary.title}
+                description={errorBoundary.description}
+                onError={errorBoundary.onError}
+              >
+                {main}
+              </ErrorBoundary>
+            ) : (
+              main
+            )}
           </main>
 
           {/* Right Sidebar */}
