@@ -1,11 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/nextjs'
 import { useState } from 'react'
+// Atoms
 import { Button } from '../components/atoms/button'
 import { Input, Textarea } from '../components/atoms/input'
 import { Text } from '../components/atoms/text'
-import { SearchField } from '../components/molecules/search-field'
-import { FormGroup } from '../components/molecules/form-group'
-import { ButtonGroup } from '../components/molecules/button-group'
 import { PlusIcon, SearchIcon, ChevronRightIcon } from '../components/atoms/icons'
 import { 
   Card, 
@@ -43,15 +41,6 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
   Avatar,
   AvatarFallback,
   AvatarImage,
@@ -71,20 +60,9 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-  DropdownMenuSeparator,
   AspectRatio,
   Breadcrumb,
   BreadcrumbItem,
@@ -98,6 +76,33 @@ import {
   toast,
   truccoToast
 } from '../components/atoms'
+
+// Molecules
+import { SearchField } from '../components/molecules/search-field'
+import { FormGroup } from '../components/molecules/form-group'
+import { ButtonGroup } from '../components/molecules/button-group'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator
+} from '../components/molecules'
 
 const meta = {
   title: 'Themes/Showcase',

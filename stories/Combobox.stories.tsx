@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { useState } from 'react'
-import { Combobox, EnhancedCombobox } from '@/components/atoms'
+import { Combobox, EnhancedCombobox } from '@/components/organisms'
 
 const meta: Meta<typeof Combobox> = {
-  title: 'Atoms/Combobox',
+  title: 'Organisms/Combobox',
   component: Combobox,
   parameters: {
     layout: 'centered',

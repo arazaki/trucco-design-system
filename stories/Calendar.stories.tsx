@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { useState } from 'react'
-import { Calendar } from '@/components/atoms'
+import { Calendar } from '@/components/organisms'
 
 const meta: Meta<typeof Calendar> = {
-  title: 'Atoms/Calendar',
+  title: 'Organisms/Calendar',
   component: Calendar,
   parameters: {
     layout: 'centered',

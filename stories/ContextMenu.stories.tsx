@@ -13,10 +13,10 @@ import {
   ContextMenuSub,
   ContextMenuSubContent,
   ContextMenuSubTrigger,
-} from '@/components/atoms'
+} from '@/components/molecules'
 
 const meta: Meta<typeof ContextMenu> = {
-  title: 'Atoms/ContextMenu',
+  title: 'Molecules/ContextMenu',
   component: ContextMenu,
   parameters: {
     layout: 'centered',

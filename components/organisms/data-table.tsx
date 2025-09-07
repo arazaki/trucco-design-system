@@ -196,7 +196,7 @@ export function createSortableHeader<TData>(
   title: string,
   accessorKey: string
 ) {
-  return ({ column }: { column: any }) => {
+  const SortableHeader = ({ column }: { column: any }) => {
     return (
       <Button
         variant="ghost"
@@ -207,6 +207,9 @@ export function createSortableHeader<TData>(
       </Button>
     )
   }
+  
+  SortableHeader.displayName = `SortableHeader-${title}`
+  return SortableHeader
 }
 
 // Helper function to create action columns

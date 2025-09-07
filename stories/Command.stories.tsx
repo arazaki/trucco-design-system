@@ -9,12 +9,12 @@ import {
   CommandItem, 
   CommandList,
   CommandSeparator,
-  CommandShortcut, 
-  Button
-} from '@/components/atoms'
+  CommandShortcut
+} from '@/components/organisms'
+import { Button } from '@/components/atoms'
 
 const meta: Meta<typeof Command> = {
-  title: 'Atoms/Command',
+  title: 'Organisms/Command',
   component: Command,
   parameters: {
     layout: 'centered',

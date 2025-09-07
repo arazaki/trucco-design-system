@@ -13,12 +13,12 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuShortcut,
-  DropdownMenuGroup,
-  Button
-} from '@/components/atoms'
+  DropdownMenuGroup
+} from '@/components/molecules'
+import { Button } from '@/components/atoms'
 
 const meta: Meta<typeof DropdownMenu> = {
-  title: 'Atoms/DropdownMenu',
+  title: 'Molecules/DropdownMenu',
   component: DropdownMenu,
   parameters: {
     layout: 'centered',

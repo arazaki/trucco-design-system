@@ -1,8 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { HoverCard, HoverCardContent, HoverCardTrigger, EnhancedHoverCard, Avatar, AvatarFallback, AvatarImage, Button } from '@/components/atoms'
+import { HoverCard, HoverCardContent, HoverCardTrigger, EnhancedHoverCard } from '@/components/molecules'
+import { Avatar, AvatarFallback, AvatarImage, Button } from '@/components/atoms'
 
 const meta: Meta<typeof HoverCard> = {
-  title: 'Atoms/HoverCard',
+  title: 'Molecules/HoverCard',
   component: HoverCard,
   parameters: {
     layout: 'centered',

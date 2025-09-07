@@ -1,9 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { ColumnDef } from '@tanstack/react-table'
-import { DataTable, createSortableHeader, createActionColumn, createSelectionColumn, Badge } from '@/components/atoms'
+import { DataTable, createSortableHeader, createActionColumn, createSelectionColumn } from '@/components/organisms'
+import { Badge } from '@/components/atoms'
 
 const meta: Meta<typeof DataTable> = {
-  title: 'Atoms/DataTable',
+  title: 'Organisms/DataTable',
   component: DataTable,
   parameters: {
     layout: 'centered',

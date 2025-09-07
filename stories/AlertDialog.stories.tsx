@@ -8,12 +8,12 @@ import {
   AlertDialogFooter, 
   AlertDialogHeader, 
   AlertDialogTitle, 
-  AlertDialogTrigger,
-  Button
-} from '@/components/atoms'
+  AlertDialogTrigger
+} from '@/components/molecules'
+import { Button } from '@/components/atoms'
 
 const meta: Meta<typeof AlertDialog> = {
-  title: 'Atoms/AlertDialog',
+  title: 'Molecules/AlertDialog',
   component: AlertDialog,
   parameters: {
     layout: 'centered',
