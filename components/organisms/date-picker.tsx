@@ -5,12 +5,12 @@ import { format } from 'date-fns'
 import { Calendar as CalendarIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
-import { Calendar } from '@/components/atoms/calendar'
+import { Calendar } from './calendar'
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@/components/atoms/popover'
+} from '../molecules/popover'
 
 export interface DatePickerProps {
   date?: Date

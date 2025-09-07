@@ -11,12 +11,12 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from '@/components/atoms/command'
+} from './command'
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@/components/atoms/popover'
+} from '../molecules/popover'
 
 export interface ComboboxOption {
   label: string

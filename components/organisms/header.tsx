@@ -3,6 +3,7 @@ import * as React from 'react'
 import { SearchField } from '../molecules/search-field'
 import { Text } from '../atoms/text'
 import { cn } from '@/lib/utils'
+import { ErrorBoundary } from './error-boundary'
 
 export interface HeaderProps extends React.HTMLAttributes<HTMLElement> {
   logo?: React.ReactNode
@@ -13,6 +14,12 @@ export interface HeaderProps extends React.HTMLAttributes<HTMLElement> {
   showSearch?: boolean
   sticky?: boolean
   border?: boolean
+  errorBoundary?: {
+    enabled?: boolean
+    title?: string
+    description?: string
+    onError?: (error: Error, errorInfo: React.ErrorInfo) => void
+  }
 }
 
 const Header = React.forwardRef<HTMLElement, HeaderProps>(
@@ -26,10 +33,11 @@ const Header = React.forwardRef<HTMLElement, HeaderProps>(
     showSearch = false,
     sticky = false,
     border = true,
+    errorBoundary = { enabled: true },
     children,
     ...props
   }, ref) => {
-    return (
+    const headerContent = (
       <header
         ref={ref}
         className={cn(
@@ -101,6 +109,20 @@ const Header = React.forwardRef<HTMLElement, HeaderProps>(
           {children}
         </div>
       </header>
+    )
+
+    if (errorBoundary?.enabled === false) {
+      return headerContent
+    }
+
+    return (
+      <ErrorBoundary
+        title={errorBoundary?.title || "Header Error"}
+        description={errorBoundary?.description || "Unable to load header content. Some navigation or search features may not be available."}
+        onError={errorBoundary?.onError}
+      >
+        {headerContent}
+      </ErrorBoundary>
     )
   }
 )

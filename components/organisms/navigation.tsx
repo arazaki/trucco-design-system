@@ -2,6 +2,7 @@ import * as React from 'react'
 // import { Button } from '../atoms/button' // Not used currently
 // import { Text } from '../atoms/text' // Not used currently
 import { cn } from '@/lib/utils'
+import { ErrorBoundary } from './error-boundary'
 
 export interface NavigationItem {
   id: string
@@ -21,6 +22,12 @@ export interface NavigationProps extends React.HTMLAttributes<HTMLElement> {
   size?: 'sm' | 'md' | 'lg'
   activeItem?: string
   onItemClick?: (item: NavigationItem) => void
+  errorBoundary?: {
+    enabled?: boolean
+    title?: string
+    description?: string
+    onError?: (error: Error, errorInfo: React.ErrorInfo) => void
+  }
 }
 
 const Navigation = React.forwardRef<HTMLElement, NavigationProps>(
@@ -32,6 +39,7 @@ const Navigation = React.forwardRef<HTMLElement, NavigationProps>(
     size = 'md',
     activeItem,
     onItemClick,
+    errorBoundary = { enabled: true },
     ...props
   }, ref) => {
     const isVertical = orientation === 'vertical'
@@ -133,7 +141,7 @@ const Navigation = React.forwardRef<HTMLElement, NavigationProps>(
       )
     }
 
-    return (
+    const navigationContent = (
       <nav
         ref={ref}
         className={cn(
@@ -150,6 +158,20 @@ const Navigation = React.forwardRef<HTMLElement, NavigationProps>(
       >
         {items.map(renderItem)}
       </nav>
+    )
+
+    if (errorBoundary?.enabled === false) {
+      return navigationContent
+    }
+
+    return (
+      <ErrorBoundary
+        title={errorBoundary?.title || "Navigation Error"}
+        description={errorBoundary?.description || "Unable to load navigation items. Some menu items may not be available."}
+        onError={errorBoundary?.onError}
+      >
+        {navigationContent}
+      </ErrorBoundary>
     )
   }
 )
