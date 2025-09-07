@@ -191,6 +191,98 @@ interface TextareaProps {
 - Proper ARIA attributes for accessibility
 - Auto-generated IDs for label association
 
+### ErrorBoundary Component (`/components/organisms/error-boundary.tsx`)
+
+**react-error-boundary Enhanced Wrapper**: Built on the industry-standard `react-error-boundary` library with Trucco design system integration.
+
+**Props Interface**:
+```typescript
+interface ErrorBoundaryProps {
+  fallback?: React.ComponentType<ErrorFallbackProps>
+  title?: string
+  description?: string
+  onError?: (error: Error, errorInfo: React.ErrorInfo) => void
+  children: React.ReactNode
+}
+
+interface ErrorFallbackProps {
+  error: Error
+  resetErrorBoundary: () => void
+  title?: string
+  description?: string
+}
+```
+
+**Architecture**:
+- Built on proven `react-error-boundary` library foundation
+- Automatic development error details with collapsible stack traces
+- Professional error UI using existing Alert component
+- Icon integration with AlertTriangle and RefreshCw from Lucide
+- Automatic error logging to console in development
+
+**Usage Examples**:
+```tsx
+// Basic usage
+<ErrorBoundary>
+  <ComplexComponent />
+</ErrorBoundary>
+
+// Custom error messages
+<ErrorBoundary
+  title="Data Loading Failed"
+  description="Unable to load user data. Please check your connection."
+>
+  <DataComponent />
+</ErrorBoundary>
+
+// With error logging
+<ErrorBoundary
+  onError={(error, errorInfo) => {
+    console.error('Component error:', error)
+    analytics.track('component_error', { error: error.message })
+  }}
+>
+  <CriticalComponent />
+</ErrorBoundary>
+
+// Custom fallback UI
+<ErrorBoundary fallback={CustomErrorFallback}>
+  <YourComponent />
+</ErrorBoundary>
+
+// HOC pattern
+const SafeComponent = withTruccoErrorBoundary(YourComponent, {
+  title: "Component Error"
+})
+```
+
+**Available Fallback Components**:
+- **ErrorFallback** (default): Professional UI with detailed error handling
+- **SimpleErrorFallback**: Minimal UI for constrained spaces
+- **Custom fallbacks**: Implement `ErrorFallbackProps` interface
+
+**PageLayout Integration**:
+```tsx
+<PageLayout
+  main={<YourContent />}
+  errorBoundary={{
+    enabled: true,
+    title: "Page Error",
+    description: "Something went wrong in the main content area",
+    onError: (error, errorInfo) => logError(error, errorInfo)
+  }}
+/>
+```
+
+**When to Use**:
+- ✅ Organism-level complex components
+- ✅ Template/layout components
+- ✅ Data-heavy components with external dependencies
+- ✅ Third-party integrations
+- ❌ Atom-level components (buttons, inputs, text)
+- ❌ Event handlers (use try-catch instead)
+- ❌ Async operations (use try-catch in async functions)
+
 ## shadcn/ui Integration Architecture
 
 ### CSS Variable Bridge System
@@ -359,6 +451,52 @@ const { theme, setTheme } = useTheme()
 ## Component Creation Methodology
 
 > **📖 Complete Guide**: See `/docs/COMPONENT_CREATION_GUIDE.md` for comprehensive step-by-step instructions.
+> **🛡️ ErrorBoundary Guide**: See `/docs/ERROR_BOUNDARY_GUIDE.md` for error handling patterns.
+
+## ⚠️ CRITICAL AI Development Requirements
+
+### 1. ALWAYS Run Code Quality Checks
+After implementing any component or making code changes, you MUST run:
+
+```bash
+npm run lint          # Check code style and fix issues
+npx tsc --noEmit      # Verify TypeScript compilation
+```
+
+**Failure to run these checks will result in broken builds and merge conflicts.**
+
+### 2. ErrorBoundary Integration Requirements
+
+When creating or updating components, consider ErrorBoundary integration:
+
+#### ✅ MUST Use ErrorBoundary For:
+- **Organism-level components** - Complex components with multiple parts
+- **Template/Layout components** - Components that render user content  
+- **Data-heavy components** - Components with external API dependencies
+- **Third-party integrations** - External libraries or widgets
+
+#### ❌ NEVER Use ErrorBoundary For:
+- **Atom-level components** - Simple buttons, inputs, text, icons
+- **Event handlers** - Use try-catch instead
+- **Async operations** - Use try-catch in async functions
+
+#### Implementation Pattern:
+```tsx
+// For Organisms - Add ErrorBoundary props
+interface OrganismProps {
+  errorBoundary?: {
+    enabled?: boolean
+    title?: string
+    description?: string
+    onError?: (error: Error, errorInfo: React.ErrorInfo) => void
+  }
+}
+
+// For Templates - Follow PageLayout pattern
+<ErrorBoundary title="Meaningful Title" description="User-friendly message">
+  <ComplexComponent />
+</ErrorBoundary>
+```
 
 ### Systematic Component Creation Approach
 
@@ -520,12 +658,13 @@ const meta: Meta<typeof Component> = {
 #### Phase 5: Quality Assurance Checklist
 
 **Essential Steps**:
-1. ✅ **Export Integration**: Add component to `components/atoms/index.ts`
+1. ✅ **Export Integration**: Add component to appropriate `components/[level]/index.ts`
 2. ✅ **Type Safety**: Ensure proper TypeScript interfaces with explicit variants
-3. ✅ **Accessibility**: Include proper ARIA attributes and keyboard support
-4. ✅ **Storybook**: Create comprehensive stories with all variants
-5. ✅ **Code Quality**: Run `npm run lint` and `npm run build`
-6. ✅ **Real-world Examples**: Include contextual usage stories
+3. ✅ **ErrorBoundary Integration**: Add ErrorBoundary for organism/template components
+4. ✅ **Accessibility**: Include proper ARIA attributes and keyboard support
+5. ✅ **Storybook**: Create comprehensive stories with all variants (including error scenarios)
+6. ✅ **Code Quality**: **ALWAYS** run `npm run lint` and `npx tsc --noEmit`
+7. ✅ **Real-world Examples**: Include contextual usage stories
 
 #### Recent Implementation Examples
 
@@ -548,10 +687,11 @@ const meta: Meta<typeof Component> = {
 
 1. **Wrapper Strategy**: Always wrap shadcn/ui components, never replace
 2. **Semantic Enhancement**: Add Trucco's semantic variants while preserving shadcn defaults
-3. **Type Safety**: Use `Omit` to handle variant conflicts in TypeScript interfaces
-4. **Accessibility First**: Leverage shadcn's Radix UI foundation and enhance with proper ARIA
-5. **Documentation Driven**: Create comprehensive Storybook stories for all variants
-6. **Quality Gates**: Always run lint and build to ensure code quality
+3. **Error Resilience**: Integrate ErrorBoundary for organism/template components
+4. **Type Safety**: Use `Omit` to handle variant conflicts in TypeScript interfaces
+5. **Accessibility First**: Leverage shadcn's Radix UI foundation and enhance with proper ARIA
+6. **Documentation Driven**: Create comprehensive Storybook stories for all variants
+7. **Quality Gates**: **ALWAYS** run `npm run lint` and `npx tsc --noEmit` before completing tasks
 
 ## Development Patterns
 
