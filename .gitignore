@@ -8,6 +8,8 @@ yarn-error.log*
 .next/
 .rollup.cache/
 storybook-static/
+dist/
+*.tsbuildinfo
 
 # Environment variables
 .env
