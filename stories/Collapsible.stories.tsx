@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
+import React from 'react'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger, EnhancedCollapsible } from '@/components/atoms'
 import { Button } from '@/components/atoms'
 

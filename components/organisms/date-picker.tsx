@@ -3,6 +3,7 @@
 import * as React from 'react'
 import { format } from 'date-fns'
 import { Calendar as CalendarIcon } from 'lucide-react'
+import { DateRange } from 'react-day-picker'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Calendar } from './calendar'
@@ -93,8 +94,8 @@ export function EnhancedDatePicker({
 
 // Date Range Picker
 export interface DateRangePickerProps {
-  dateRange?: { from: Date; to?: Date }
-  onDateRangeChange?: (dateRange: { from: Date; to?: Date } | undefined) => void
+  dateRange?: DateRange
+  onDateRangeChange?: (dateRange: DateRange | undefined) => void
   placeholder?: string
   disabled?: boolean
   className?: string
@@ -148,4 +149,4 @@ export function DateRangePicker({
   )
 }
 
-export type { DatePickerProps, EnhancedDatePickerProps, DateRangePickerProps }
+// Types are already exported inline above

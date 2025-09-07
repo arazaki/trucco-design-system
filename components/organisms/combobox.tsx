@@ -130,4 +130,4 @@ export function EnhancedCombobox({
   )
 }
 
-export type { ComboboxProps, EnhancedComboboxProps }
+// Types are already exported inline above

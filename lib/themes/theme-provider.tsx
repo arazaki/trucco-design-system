@@ -57,7 +57,6 @@ const darkTokens: DesignTokens = {
   },
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function deepMerge(target: any, source: any): any {
   const result = { ...target }
   
@@ -222,7 +221,6 @@ function ThemeHydration({ children }: { children: React.ReactNode }) {
       : deepMerge(defaultTokens, customTokens)
 
     // Set CSS custom properties for runtime access
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const setCSSProperty = (obj: any, prefix = '') => {
       for (const [key, value] of Object.entries(obj)) {
         if (typeof value === 'object' && value !== null && !Array.isArray(value)) {

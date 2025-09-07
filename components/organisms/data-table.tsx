@@ -192,9 +192,9 @@ export function DataTable<TData, TValue>({
 }
 
 // Helper function to create sortable column headers
-export function createSortableHeader<TData>(
+export function createSortableHeader(
   title: string,
-  accessorKey: string
+  // _accessorKey: string // Parameter kept for API compatibility but not used internally
 ) {
   const SortableHeader = ({ column }: { column: any }) => {
     return (
@@ -213,7 +213,7 @@ export function createSortableHeader<TData>(
 }
 
 // Helper function to create action columns
-export function createActionColumn<TData>() {
+export function createActionColumn() {
   return {
     id: 'actions',
     enableHiding: false,
@@ -245,7 +245,7 @@ export function createActionColumn<TData>() {
 }
 
 // Helper function to create selection column
-export function createSelectionColumn<TData>() {
+export function createSelectionColumn() {
   return {
     id: 'select',
     header: ({ table }: { table: any }) => (

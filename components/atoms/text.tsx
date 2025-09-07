@@ -59,8 +59,7 @@ export interface TextProps
   children: React.ReactNode
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const Text = React.forwardRef<any, TextProps>(
+const Text = React.forwardRef<HTMLElement, TextProps>(
   ({ className, variant, align, weight, as, children, ...props }, ref) => {
     let Component: React.ElementType = 'p'
     

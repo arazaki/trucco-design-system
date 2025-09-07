@@ -26,10 +26,10 @@ export {
   CommandShortcut,
 } from './command'
 
-export { Combobox } from './combobox'
+export { Combobox, EnhancedCombobox } from './combobox'
 export type { ComboboxProps, EnhancedComboboxProps } from './combobox'
 
-export { DatePicker, DateRangePicker } from './date-picker'
+export { DatePicker, EnhancedDatePicker, DateRangePicker } from './date-picker'
 export type { DatePickerProps, EnhancedDatePickerProps, DateRangePickerProps } from './date-picker'
 
 export {
