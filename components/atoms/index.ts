@@ -194,8 +194,8 @@ export type { SkeletonProps, SkeletonTextProps, SkeletonAvatarProps, SkeletonCar
 export { Popover, PopoverContent, PopoverTrigger } from './popover'
 export type { PopoverProps, PopoverContentProps, PopoverTriggerProps } from './popover'
 
-// export { Calendar } from './calendar'
-// export type { CalendarProps } from './calendar'
+export { Calendar } from './calendar'
+export type { CalendarProps } from './calendar'
 
 export {
   Breadcrumb,
@@ -288,3 +288,139 @@ export type {
   SheetTriggerProps,
   EnhancedSheetProps,
 } from './sheet'
+
+// New components
+export {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from './carousel'
+export type { CarouselApi } from './carousel'
+
+export { Combobox, EnhancedCombobox } from './combobox'
+export type { ComboboxProps, EnhancedComboboxProps, ComboboxOption } from './combobox'
+
+export {
+  Command,
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandSeparator,
+  CommandShortcut,
+} from './command'
+
+export {
+  ContextMenu,
+  ContextMenuTrigger,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuCheckboxItem,
+  ContextMenuRadioItem,
+  ContextMenuLabel,
+  ContextMenuSeparator,
+  ContextMenuShortcut,
+  ContextMenuGroup,
+  ContextMenuPortal,
+  ContextMenuSub,
+  ContextMenuSubContent,
+  ContextMenuSubTrigger,
+  ContextMenuRadioGroup,
+} from './context-menu'
+
+export { DataTable, createSortableHeader, createActionColumn, createSelectionColumn } from './data-table'
+export type { DataTableProps } from './data-table'
+
+export { DatePicker, EnhancedDatePicker, DateRangePicker } from './date-picker'
+export type { DatePickerProps, EnhancedDatePickerProps, DateRangePickerProps } from './date-picker'
+
+export {
+  Drawer,
+  DrawerPortal,
+  DrawerOverlay,
+  DrawerTrigger,
+  DrawerClose,
+  DrawerContent,
+  DrawerHeader,
+  DrawerFooter,
+  DrawerTitle,
+  DrawerDescription,
+} from './drawer'
+
+export { InputOTP, InputOTPGroup, InputOTPSlot, InputOTPSeparator } from './input-otp'
+
+export {
+  Menubar,
+  MenubarMenu,
+  MenubarTrigger,
+  MenubarContent,
+  MenubarItem,
+  MenubarSeparator,
+  MenubarLabel,
+  MenubarCheckboxItem,
+  MenubarRadioGroup,
+  MenubarRadioItem,
+  MenubarPortal,
+  MenubarSubContent,
+  MenubarSubTrigger,
+  MenubarGroup,
+  MenubarSub,
+  MenubarShortcut,
+} from './menubar'
+
+export {
+  NavigationMenu,
+  NavigationMenuList,
+  NavigationMenuItem,
+  NavigationMenuContent,
+  NavigationMenuTrigger,
+  NavigationMenuLink,
+  NavigationMenuIndicator,
+  NavigationMenuViewport,
+  navigationMenuTriggerStyle,
+} from './navigation-menu'
+
+export {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from './pagination'
+
+export { ResizablePanelGroup, ResizablePanel, ResizableHandle } from './resizable'
+
+export {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupAction,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarInput,
+  SidebarInset,
+  SidebarMenu,
+  SidebarMenuAction,
+  SidebarMenuBadge,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarMenuSkeleton,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
+  SidebarProvider,
+  SidebarRail,
+  SidebarSeparator,
+  SidebarTrigger,
+  useSidebar,
+} from './sidebar'
+
+export { SonnerToaster } from './sonner'
